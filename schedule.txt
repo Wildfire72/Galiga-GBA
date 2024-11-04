@@ -3,7 +3,7 @@ Game Description: Due Nov. 12th - 8 - Bethanie
 
 Make background - 5 (make .h file) - Dylan
 scrolling background - 8 - Matt
-Make .h file for sprites - 9 - Dylan
+Make .h file for sprites - 9 - Dylan-->Bethanie??
 Make sprites - 10 - Matt
 Sprite helper functions (to find indexes of sprites)- 10 - Matt
 Spawning enemies - 12 - Dylan-->Bethanie?
