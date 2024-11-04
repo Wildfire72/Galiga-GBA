@@ -1,2 +1,10 @@
-Project Description - Galiga
+Project Description - Galaga
 Group Members: Dylan Bohn, Matt Vierow, Bethanie Hackett
+
+Our GBA game will be a replication of the popular arcade game Galaga.
+- Description:
+
+Implementation overview:
+- Scrolling, tiled background: 
+- Sprites: 
+- Assembly code functions: 
