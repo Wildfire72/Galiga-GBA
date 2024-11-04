@@ -188,7 +188,7 @@ int main() {
         *bg1_x_scroll = xscroll * 2;
         *bg1_y_scroll = yscroll * 2;
         /* delay some */
-        delay(50);
+        delay(200);
     }
 }
 
