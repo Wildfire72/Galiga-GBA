@@ -7,7 +7,7 @@
 #include "SpaceBackgroundImage.h"
 
 /* include the tile map we are using */
-#include "Space_Background.h"
+#include "SpaceBackgroundMap.h"
 /* the width and height of the screen */
 #define WIDTH 240
 #define HEIGHT 160
@@ -142,8 +142,8 @@ void setup_background() {
 
     /* load the tile data into screen block 16 */
     dest = screen_block(16);
-    for (int i = 0; i < (Space_Background_width * Space_Background_height); i++) {
-        dest[i] = Space_Background[i];
+    for (int i = 0; i < (SpaceBackgroundMap_width * SpaceBackgroundMap_height); i++) {
+        dest[i] = SpaceBackgroundMap[i];
     }
 }
 
