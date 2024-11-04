@@ -1,11 +1,13 @@
 Aim for 18th
+Game Description: Due Nov. 12th - 8 - Bethanie 
+
 Make background - 5 (make .h file) - Dylan
 scrolling background - 8 - Matt
 Make .h file for sprites - 9 - Dylan
 Make sprites - 10 - Matt
 Sprite helper functions (to find indexes of sprites)- 10 - Matt
-Spawning enemies - 12 - Dylan
+Spawning enemies - 12 - Dylan-->Bethanie?
 movement of all sprites - 14 - Dylan
-Collsion - 16 - Matt
+Collsion - 16 - Matt-->Bethanie?
 deleting bullets - 18 - Matt
 Animation *** - Dylan
