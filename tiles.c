@@ -153,40 +153,61 @@ void delay(unsigned int amount) {
     for (int i = 0; i < amount * 10; i++);
 }
 
+void handle_buttons(){
+    /* scroll with the arrow keys */
+    if (button_pressed(BUTTON_DOWN)) {
+        yscroll++;
+    }
+    if (button_pressed(BUTTON_UP)) {
+        yscroll--;
+
+    }
+    if (button_pressed(BUTTON_RIGHT)) {
+        xscroll++;
+    }
+    if (button_pressed(BUTTON_LEFT)) {
+        xscroll--;
+    } 
+}
+
+void scrollBG1(int* xscroll, int* yscroll){
+    *bg1_x_scroll = *xscroll * 2;
+    *bg1_y_scroll = *yscroll * 2;
+}
+
+/* automatically scroll background 0 */
+void scrollBG0(int* xscroll, int* yscroll, int* count){
+    *count+=1;
+    if ((*count) == 3){
+        *xscroll+= 0;
+        *yscroll-= 1;
+        *bg0_x_scroll = *xscroll;
+        *bg0_y_scroll = *yscroll;
+        *count=0;
+    }
+}
 /* the main function */
 int main() {
     /* we set the mode to mode 0 with bg0 on */
-    *display_control = MODE0 | BG0_ENABLE | BG1_ENABLE;
+    *display_control = MODE0 | BG0_ENABLE; /* we don't use BG1 yet
+                                              | BG1_ENABLE;*/
     /* setup the background 0 */
     setup_background();
 
     /* set initial scroll to 0 */
     int xscroll = 0;
     int yscroll = 0;
+    int scrollCount = 0;
 
     /* loop forever */
     while (1) {
-        /* scroll with the arrow keys */
-        if (button_pressed(BUTTON_DOWN)) {
-            yscroll++;
-        }
-        if (button_pressed(BUTTON_UP)) {
-            yscroll--;
 
-        }
-        if (button_pressed(BUTTON_RIGHT)) {
-            xscroll++;
-        }
-        if (button_pressed(BUTTON_LEFT)) {
-            xscroll--;
-        }
-
+        scrollBG0(&xscroll,&yscroll,&scrollCount);
+        
         /* wait for vblank before scrolling */
+        
         wait_vblank();
-        *bg0_x_scroll = xscroll;
-        *bg0_y_scroll = yscroll;
-        *bg1_x_scroll = xscroll * 2;
-        *bg1_y_scroll = yscroll * 2;
+        
         /* delay some */
         delay(200);
     }
