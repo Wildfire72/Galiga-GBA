@@ -4,10 +4,11 @@ Group Members: Dylan Bohn, Matt Vierow, Bethanie Hackett
 Our GBA game will be a replication of the popular arcade game Galaga. The game is set in space, where the player controls a single starfighter that
 is fixed to the bottom of the screen, but can move horizontally (left and right). Enemy aliens spawn at the top of the screen and move downwards
 towards the player's starfighter. The starfighter is able to shoot projectiles directly up, and if they hit an alien, then the alien dies. However,
-if an alien reaches the bottom of the screen and collides with the starfighter, then the starfighter will be destroyed and the player loses. The
-player's goal is to survive against the aliens for as long as possible.
+if an alien reaches the bottom of the screen and collides with the starfighter, then the starfighter will be destroyed and the player loses. The player
+has a game score that increases with each enemy killed. The player's goal is to survive against the aliens for as long as possible and gain the highest
+score.
 
 Following the project requirements, our implementation of Galaga will include a tiled background of space, which will scroll vertically. Our game
 will also use multiple sprites, for the starfighter and for various alien species. These sprites will be taken from a publicly available image of
-the traditional Galaga game's sprites. Additionally, our implementation will contain assembly code functions to update the movement vectors and
-positions of enemy aliens and the starfighter.
+the traditional Galaga game's sprites. Additionally, our implementation will contain an assembly code function to update the movement vectors and
+positions of enemy aliens and the starfighter, and another assembly code function to update the player's score.
