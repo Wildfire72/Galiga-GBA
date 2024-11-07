@@ -7,7 +7,7 @@ Our GBA game will be a replication of the popular arcade game Galaga.
 projectiles directly up, and if they hit an alien, then the alien dies. However, if an alien reaches the bottom of the screen and collides with the 
 starfighter, then the starfighter will be destroyed and the player loses. The player's goal is to survive against the aliens for as long as possible.
 
-Implementation overview:
-- Scrolling, tiled background: 
-- Sprites: 
+Implementation overview: Following the project requirements, our implementation of Galaga will include a scrolling, tiled background, multiple sprites, and assembly code functions. 
+- Scrolling, tiled background: a space background that will scroll vertically
+- Sprites: sprites for the starfighter and various alien species; the sprites will come from a publicly available image of Galaga sprites
 - Assembly code functions: 
