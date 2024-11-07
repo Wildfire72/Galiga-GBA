@@ -2,7 +2,7 @@ Project Description - Galaga
 Group Members: Dylan Bohn, Matt Vierow, Bethanie Hackett
 
 Our GBA game will be a replication of the popular arcade game Galaga.
-- Description:
+- Description: The game is set in space, where the player controls a single starfighter that is fixed to the bottom of the screen, but can move horizontally (left and right). Enemy aliens spawn at the top of the screen and move downwards towards the player's starfighter. The starfighter is able to shoot projectiles directly up, and if they hit an alien, then the alien dies. However, if an alien reaches the bottom of the screen and collides with the starfighter, then the starfighter will be destroyed and the player loses. The player's goal is to survive against the aliens for as long as possible.
 
 Implementation overview:
 - Scrolling, tiled background: 
