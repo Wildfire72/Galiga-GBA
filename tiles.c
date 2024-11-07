@@ -3,8 +3,13 @@
  * program which demonstraes tile mode 0
  */
 
+/* palette is always 256 colors */
+#define PALETTE_SIZE 256
+
 /* include the image we are using */
 #include "SpaceBackgroundImage.h"
+
+#include "Sprites/Player.h"
 
 /* include the tile map we are using */
 #include "SpaceBackgroundMap.h"
@@ -73,6 +78,35 @@ struct Sprite {
     unsigned short attribute3;
 };
 
+/* a struct for the Player's logic and behavior */
+struct Player {
+    /* the actual sprite attribute info */
+    struct Sprite* sprite;
+
+    /* the x and y postion in pixels */
+    int x, y;
+
+    /* the koopa's y velocity in 1/256 pixels/second */
+    int yvel;
+
+    /* which frame of the animation he is on */
+    int frame;
+
+    /* the number of frames to wait before flipping */
+    int animation_delay;
+
+    /* the animation counter counts how many frames until we flip */
+    int counter;
+
+    /* whether the koopa is moving right now or not */
+    int move;
+
+    /* the number of pixels away from the edge of the screen the koopa stays */
+    int border;
+
+    int health;
+};
+
 /* array of all the sprites available on the GBA */
 struct Sprite sprites[NUM_SPRITES];
 int next_sprite_index = 0;
@@ -92,6 +126,20 @@ enum SpriteSize {
     SIZE_16_32,
     SIZE_32_64
 };
+
+/* initialize the koopa */
+void player_init(struct Player* koopa) {
+    koopa->x = 100;
+    koopa->y = 113;
+    koopa->yvel = 0;
+    koopa->border = 40;
+    koopa->frame = 0;
+    koopa->move = 0;
+    koopa->counter = 0;
+    koopa->animation_delay = 8;
+    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_32, 0, 0, 
+            koopa->frame, 0);
+}
 
 /* function to initialize a sprite with its properties, and return a pointer */
 struct Sprite* sprite_init(int x, int y, enum SpriteSize size,
@@ -298,8 +346,6 @@ volatile unsigned short* bg1_control = (volatile unsigned short*) 0x400000a;
 volatile unsigned short* bg2_control = (volatile unsigned short*) 0x400000c;
 volatile unsigned short* bg3_control = (volatile unsigned short*) 0x400000e;
 
-/* palette is always 256 colors */
-#define PALETTE_SIZE 256
 
 /* the display control pointer points to the gba graphics register */
 volatile unsigned long* display_control = (volatile unsigned long*) 0x4000000;
@@ -455,13 +501,20 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
         *count=0;
     }
 }
+
 /* the main function */
 int main() {
     /* we set the mode to mode 0 with bg0 on */
-    *display_control = MODE0 | BG0_ENABLE; /* we don't use BG1 yet
-                                              | BG1_ENABLE;*/
+    *display_control = MODE0 | BG0_ENABLE | SPRITE_ENABLE | SPRITE_MAP_1D; 
+        /* we don't use BG1 yet | BG1_ENABLE;*/
+
     /* setup the background 0 */
     setup_background();
+
+    setup_sprite_image();
+    sprite_clear();
+    struct Player* player;
+    player_init(player);
 
     /* set initial scroll to 0 */
     int xscroll = 0;
@@ -472,9 +525,11 @@ int main() {
     while (1) {
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
-        
+        /* set on screen position */
+        sprite_position(player->sprite, player->x, player->y);
+        sprite_update_all();
+
         /* wait for vblank before scrolling */
-        
         wait_vblank();
         
         /* delay some */
