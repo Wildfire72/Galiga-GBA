@@ -10,6 +10,23 @@
 #include "SpaceBackgroundImage.h"
 
 #include "Sprites/Player.h"
+#include "Sprites/Boss.h"
+#include "Sprites/Boss1.h"
+#include "Sprites/Enemy1.h"
+#include "Sprites/Enemy2.h"
+#include "Sprites/Eight.h"
+#include "Sprites/EnemyBullet.h"
+#include "Sprites/Five.h"
+#include "Sprites/Four.h"
+#include "Sprites/Nine.h"
+#include "Sprites/One.h"
+#include "Sprites/PlayerBullet.h"
+#include "Sprites/Seven.h"
+#include "Sprites/Six.h"
+#include "Sprites/Score.h"
+#include "Sprites/Three.h"
+#include "Sprites/Two.h"
+#include "Sprites/Zero.h"
 
 /* include the tile map we are using */
 #include "SpaceBackgroundMap.h"
@@ -27,6 +44,24 @@
 #define BG1_ENABLE 0x200
 #define BG2_ENABLE 0x400
 #define BG3_ENABLE 0x800
+
+/* define start of tile block for each sprite */
+#define Boss 8
+#define Enemy1 16
+#define Enemy2 24
+#define EnemyBullet 32
+#define PlayerBullet 33
+#define Score 34
+#define Zero 38
+#define One 39
+#define Two 40
+#define Three 41
+#define Four 41
+#define Five 42
+#define Six 43
+#define Seven 44
+#define Eight 45
+#define Nine 46
 
 /* flags to set sprite handling in display control register */
 #define SPRITE_MAP_2D 0x0
@@ -64,7 +99,7 @@ volatile unsigned int* dma_destination = (volatile unsigned int*) 0x40000D8;
 volatile unsigned int* dma_count = (volatile unsigned int*) 0x40000DC;
 
 /* copy data using DMA */
-void memcpy16_dma(unsigned short* dest, unsigned short* source,int amount){
+void memcpy16_dma(unsigned short* dest, unsigned short* source ,int amount){
     *dma_source = (unsigned int) source;
     *dma_destination = (unsigned int) dest;
     *dma_count = amount | DMA_16 | DMA_ENABLE;
@@ -107,6 +142,48 @@ struct Player {
     int health;
 };
 
+/* used for numbers and Score*/
+struct Number{
+    struct Sprite* sprite;
+    int x,y;
+};
+
+/* a struct for an enemies's logic and behavior */
+struct Enemy {
+    /* the actual sprite attribute info */
+    struct Sprite* sprite;
+
+    /* the x and y postion in pixels */
+    int x, y;
+
+    /* the koopa's y velocity in 1/256 pixels/second */
+    int yvel;
+
+    /* which frame of the animation he is on */
+    int frame;
+
+    /* the number of frames to wait before flipping */
+    int animation_delay;
+
+    /* the animation counter counts how many frames until we flip */
+    int counter;
+
+    /* whether the koopa is moving right now or not */
+    int move;
+
+    /* the number of pixels away from the edge of the screen the koopa stays */
+    int border;
+
+    int health;
+};
+
+/* used for Bullets*/
+struct Bullet{
+    struct Sprite* sprite;
+    int x,y;
+};
+
+
 /* array of all the sprites available on the GBA */
 struct Sprite sprites[NUM_SPRITES];
 int next_sprite_index = 0;
@@ -137,8 +214,43 @@ void player_init(struct Player* koopa) {
     koopa->move = 0;
     koopa->counter = 0;
     koopa->animation_delay = 8;
-    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_32, 0, 0, 
+    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             koopa->frame, 0);
+}
+
+/* initialize an enemy */
+void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
+    koopa->x = x;
+    koopa->y = y;
+    koopa->yvel = 0;
+    koopa->border = 40;
+    koopa->frame = 0;
+    koopa->move = 0;
+    koopa->counter = 0;
+    koopa->animation_delay = 8;
+    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
+            offset, 0);
+}
+
+void num_init(struct Number* num,int x, int y, int offset){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
+            offset, 0);
+}
+
+void bullet_init(struct Bullet* num,int x, int y,int offset){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
+            offset, 0);
+}
+
+void score_init(struct Number* num,int x, int y){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_32, 0, 0, 
+        Score, 0);
 }
 
 /* function to initialize a sprite with its properties, and return a pointer */
@@ -147,6 +259,8 @@ struct Sprite* sprite_init(int x, int y, enum SpriteSize size,
 
     /* grab the next index */
     int index = next_sprite_index++;
+
+    /* tile_index=1; */
 
     /* setup the bits used for each shape/size possible */
     int size_bits, shape_bits;
@@ -269,16 +383,172 @@ void sprite_set_offset(struct Sprite* sprite, int offset) {
     sprite->attribute2 |= (offset & 0x03ff);
 }
 
+unsigned short* correctData(unsigned short* data, int size, int offset){
+    unsigned short* new[size];
+    for (int i=0;i<size;i++){
+       if (((short)data[i]) != 0){
+            new[i]=data[i]+offset;
+        } else{
+            new[i] = 0;
+        }
+    }
+    return new;
+}
+
 /* setup the sprite image and palette */
-
 void setup_sprite_image() {
-    /* load the palette from the image into palette memory */
+    /* load the palette from the image into palette memory size=45*/
     memcpy16_dma((unsigned short*) sprite_palette, 
-            (unsigned short*) Player_palette, PALETTE_SIZE);
+            (unsigned short*) Player_palette, 45);
 
+    /* load palette for Boss size=75, offset=45*/
+    memcpy16_dma((unsigned short*) sprite_palette+45, 
+            (unsigned short*) Boss_palette, 75);
+    unsigned short* data = correctData((unsigned short*) Boss_data,
+            Boss_height*Boss_width,45);
+
+    /*    
+   * load palette for Enemy1 size=54, offset=120*
+    memcpy16_dma((unsigned short*) sprite_palette+120, 
+            (unsigned short*) Enemy1_palette, 54);
+    correctData((unsigned short*) Enemy1_data,
+            Enemy1_height*Enemy1_width,120);
+
+    * load palette for Enemy2 size=30, offset=174*
+    memcpy16_dma((unsigned short*) sprite_palette+174, 
+            (unsigned short*) Enemy2_palette, 30);
+    correctData((unsigned short*) Enemy2_data,
+            Enemy2_height*Enemy2_width,174);
+
+    * load palette for EnemyBullet size=18, offset = 204*
+    memcpy16_dma((unsigned short*) sprite_palette+204, 
+            (unsigned short*) EnemyBullet_palette, 18);
+    correctData((unsigned short*) EnemyBullet_data,
+            EnemyBullet_height*EnemyBullet_width,204);
+
+    * load palette for PlayerBullet size=14, offset = 222*
+    memcpy16_dma((unsigned short*) sprite_palette+222, 
+            (unsigned short*) PlayerBullet_palette, 14);
+    correctData((unsigned short*) PlayerBullet_data,
+            PlayerBullet_height*PlayerBullet_width,222);
+
+    * load palette for Score size=9, offset = 236*
+    memcpy16_dma((unsigned short*) sprite_palette+236, 
+            (unsigned short*) Score_palette, 9);
+    correctData((unsigned short*) Score_data,
+            Score_height*Score_width,236);
+   
+   * load palette for Nums size=5, offset = 241*
+    memcpy16_dma((unsigned short*) sprite_palette+241, 
+            (unsigned short*) One_palette, 5);
+    correctData((unsigned short*) Zero_data,
+            Zero_height*Zero_width,241);
+    correctData((unsigned short*) One_data,
+            One_height*One_width,241);
+    correctData((unsigned short*) Two_data,
+            Two_height*Two_width,241);
+    correctData((unsigned short*) Three_data,
+            Three_height*Three_width,241);
+    correctData((unsigned short*) Four_data,
+            Four_height*Four_width,241);
+    correctData((unsigned short*) Five_data,
+            Five_height*Five_width,241);
+    correctData((unsigned short*) Six_data,
+            Six_height*Six_width,241);
+    correctData((unsigned short*) Seven_data,
+            Seven_height*Seven_width,241);
+    correctData((unsigned short*) Eight_data,
+            Eight_height*Eight_width,241);
+    correctData((unsigned short*) Nine_data,
+            Nine_height*Nine_width,241);
+   */ 
     /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory, 
     (unsigned short*) Player_data, (Player_width * Player_height) / 2);
+
+    short spr_index=(Player_width*Player_height)/2;
+    /* load the image into sprite image memory */
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) data, (Boss_width * Boss_height) / 2);
+    
+    spr_index+=(Boss_width*Boss_height)/2;
+/*
+    * load the image into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Enemy1_data, (Enemy1_width * Enemy1_height) / 2);
+    spr_index+=(Enemy1_width*Enemy1_height)/2;
+
+    * load the image into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Enemy2_data, (Enemy2_width * Enemy2_height) / 2);
+    spr_index+=(Enemy2_width*Enemy2_height)/2;
+
+    * load the image into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) EnemyBullet_data, 
+        (EnemyBullet_width * EnemyBullet_height) / 2);
+    spr_index+=(EnemyBullet_width*EnemyBullet_height)/2;
+
+    * load the image into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) PlayerBullet_data, 
+        (PlayerBullet_width * PlayerBullet_height) / 2);
+    spr_index+=(PlayerBullet_width*PlayerBullet_height)/2;
+
+    * load the Score into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Score_data, (Score_width * Score_height) / 2);
+    spr_index+=(Score_width*Score_height)/2;
+
+    * load Zero into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Zero_data, (Zero_width * Zero_height) / 2);
+    spr_index+=(Zero_width*Zero_height)/2;
+
+    * load One into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) One_data, (One_width * One_height) / 2);
+    spr_index+=(One_width*One_height)/2;
+
+    * load Two into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Two_data, (Two_width * Two_height) / 2);
+    spr_index+=(Two_width*Two_height)/2;
+
+    * load Three into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Three_data, (Three_width * Three_height) / 2);
+    spr_index+=(Three_width*Three_height)/2;
+
+    * load Four into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Four_data, (Four_width * Four_height) / 2);
+    spr_index+=(Four_width*Four_height)/2;
+
+    * load Five into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Five_data, (Five_width * Five_height) / 2);
+    spr_index+=(Five_width*Five_height)/2;
+
+    * load Six into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Six_data, (Six_width * Six_height) / 2);
+    spr_index+=(Six_width*Six_height)/2;
+
+    * load Seven into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Seven_data, (Seven_width * Seven_height) / 2);
+    spr_index+=(Eight_width*Eight_height)/2;
+
+    * load Eight into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Eight_data, (Eight_width * Eight_height) / 2);
+    spr_index+=(Eight_width*Eight_height)/2;
+
+    * load Nine into sprite image memory *
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) Nine_data, (Nine_width * Nine_height) / 2);
+    spr_index+=(Nine_width*Nine_height)/2; */
 }
 
 /* finds which tile a screen coordinate maps to, 
@@ -516,6 +786,54 @@ int main() {
     struct Player* player;
     player_init(player);
 
+    struct Enemy* boss;
+    enemy_init(boss,96,0,Boss);
+    
+/*    struct Enemy* enemy1;
+    enemy_init(enemy1,32,0,Enemy1);
+
+    struct Enemy* enemy2;
+    enemy_init(enemy2,64,0,Enemy2);
+
+    struct Bullet* pBullet;
+    bullet_init(pBullet,128,0,PlayerBullet);
+
+    struct Bullet* eBullet;
+    bullet_init(eBullet,136,0,EnemyBullet);
+
+    struct Number* score;
+    score_init(score,0,32);
+
+    struct Number* zero;
+    num_init(zero,32,32,Zero);
+
+    struct Number* one;
+    num_init(one,40,32,One);
+
+    struct Number* two;
+    num_init(two,48,32,Two);
+
+    struct Number* three;
+    num_init(three,56,32,Three);
+
+    struct Number* four;
+    num_init(four,64,32,Four);
+
+    struct Number* five;
+    num_init(five,72,32,Five);
+
+    struct Number* six;
+    num_init(six,80,32,Six);
+
+    struct Number* seven;
+    num_init(seven,88,32,Seven);
+
+    struct Number* eight;
+    num_init(eight,96,32,Eight);
+
+    struct Number* nine;
+    num_init(nine,104,32,Nine);
+*/
     /* set initial scroll to 0 */
     int xscroll = 0;
     int yscroll = 0;
