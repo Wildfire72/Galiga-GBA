@@ -407,61 +407,31 @@ void setup_sprite_image() {
     unsigned short* data = correctData((unsigned short*) Boss_data,
             Boss_height*Boss_width,45);
 
-    /*    
-   * load palette for Enemy1 size=54, offset=120*
+       
+   /* load palette for Enemy1 size=54, offset=120*/
     memcpy16_dma((unsigned short*) sprite_palette+120, 
             (unsigned short*) Enemy1_palette, 54);
-    correctData((unsigned short*) Enemy1_data,
-            Enemy1_height*Enemy1_width,120);
 
-    * load palette for Enemy2 size=30, offset=174*
+    /* load palette for Enemy2 size=30, offset=174*/
     memcpy16_dma((unsigned short*) sprite_palette+174, 
             (unsigned short*) Enemy2_palette, 30);
-    correctData((unsigned short*) Enemy2_data,
-            Enemy2_height*Enemy2_width,174);
 
-    * load palette for EnemyBullet size=18, offset = 204*
+    /* load palette for EnemyBullet size=18, offset = 204*/
     memcpy16_dma((unsigned short*) sprite_palette+204, 
             (unsigned short*) EnemyBullet_palette, 18);
-    correctData((unsigned short*) EnemyBullet_data,
-            EnemyBullet_height*EnemyBullet_width,204);
 
-    * load palette for PlayerBullet size=14, offset = 222*
+    /* load palette for PlayerBullet size=14, offset = 222*/
     memcpy16_dma((unsigned short*) sprite_palette+222, 
             (unsigned short*) PlayerBullet_palette, 14);
-    correctData((unsigned short*) PlayerBullet_data,
-            PlayerBullet_height*PlayerBullet_width,222);
 
-    * load palette for Score size=9, offset = 236*
+    /* load palette for Score size=9, offset = 236*/
     memcpy16_dma((unsigned short*) sprite_palette+236, 
             (unsigned short*) Score_palette, 9);
-    correctData((unsigned short*) Score_data,
-            Score_height*Score_width,236);
    
-   * load palette for Nums size=5, offset = 241*
+    /* load palette for Nums size=5, offset = 241*/
     memcpy16_dma((unsigned short*) sprite_palette+241, 
             (unsigned short*) One_palette, 5);
-    correctData((unsigned short*) Zero_data,
-            Zero_height*Zero_width,241);
-    correctData((unsigned short*) One_data,
-            One_height*One_width,241);
-    correctData((unsigned short*) Two_data,
-            Two_height*Two_width,241);
-    correctData((unsigned short*) Three_data,
-            Three_height*Three_width,241);
-    correctData((unsigned short*) Four_data,
-            Four_height*Four_width,241);
-    correctData((unsigned short*) Five_data,
-            Five_height*Five_width,241);
-    correctData((unsigned short*) Six_data,
-            Six_height*Six_width,241);
-    correctData((unsigned short*) Seven_data,
-            Seven_height*Seven_width,241);
-    correctData((unsigned short*) Eight_data,
-            Eight_height*Eight_width,241);
-    correctData((unsigned short*) Nine_data,
-            Nine_height*Nine_width,241);
-   */ 
+    
     /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory, 
     (unsigned short*) Player_data, (Player_width * Player_height) / 2);
@@ -472,83 +442,113 @@ void setup_sprite_image() {
     (unsigned short*) data, (Boss_width * Boss_height) / 2);
     
     spr_index+=(Boss_width*Boss_height)/2;
-/*
-    * load the image into sprite image memory *
+
+    data=correctData((unsigned short*) Enemy1_data,
+            Enemy1_height*Enemy1_width,120);
+    /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Enemy1_data, (Enemy1_width * Enemy1_height) / 2);
+    (unsigned short*) data, (Enemy1_width * Enemy1_height) / 2);
     spr_index+=(Enemy1_width*Enemy1_height)/2;
 
-    * load the image into sprite image memory *
+    data=correctData((unsigned short*) Enemy2_data,
+            Enemy2_height*Enemy2_width,174);
+    /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Enemy2_data, (Enemy2_width * Enemy2_height) / 2);
+    (unsigned short*) data, (Enemy2_width * Enemy2_height) / 2);
     spr_index+=(Enemy2_width*Enemy2_height)/2;
-
-    * load the image into sprite image memory *
+    
+    data=correctData((unsigned short*) EnemyBullet_data,
+            EnemyBullet_height*EnemyBullet_width,204);
+    
+    /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) EnemyBullet_data, 
+    (unsigned short*) data, 
         (EnemyBullet_width * EnemyBullet_height) / 2);
     spr_index+=(EnemyBullet_width*EnemyBullet_height)/2;
 
-    * load the image into sprite image memory *
+    data=correctData((unsigned short*) PlayerBullet_data,
+            PlayerBullet_height*PlayerBullet_width,222);
+    /* load the image into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) PlayerBullet_data, 
+    (unsigned short*) data, 
         (PlayerBullet_width * PlayerBullet_height) / 2);
     spr_index+=(PlayerBullet_width*PlayerBullet_height)/2;
 
-    * load the Score into sprite image memory *
+    data=correctData((unsigned short*) Score_data,
+            Score_height*Score_width,236);
+    /* load the Score into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Score_data, (Score_width * Score_height) / 2);
+    (unsigned short*) data, (Score_width * Score_height) / 2);
     spr_index+=(Score_width*Score_height)/2;
 
-    * load Zero into sprite image memory *
+    data=correctData((unsigned short*) Zero_data,
+            Zero_height*Zero_width,241);
+    /* load Zero into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Zero_data, (Zero_width * Zero_height) / 2);
+    (unsigned short*) data, (Zero_width * Zero_height) / 2);
     spr_index+=(Zero_width*Zero_height)/2;
 
-    * load One into sprite image memory *
+    data=correctData((unsigned short*) One_data,
+            One_height*One_width,241);
+    /* load One into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) One_data, (One_width * One_height) / 2);
+    (unsigned short*) data, (One_width * One_height) / 2);
     spr_index+=(One_width*One_height)/2;
 
-    * load Two into sprite image memory *
+    data=correctData((unsigned short*) Two_data,
+            Two_height*Two_width,241);
+    /* load Two into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Two_data, (Two_width * Two_height) / 2);
+    (unsigned short*) data, (Two_width * Two_height) / 2);
     spr_index+=(Two_width*Two_height)/2;
 
-    * load Three into sprite image memory *
+    data=correctData((unsigned short*) Three_data,
+            Three_height*Three_width,241);
+    /* load Three into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Three_data, (Three_width * Three_height) / 2);
+    (unsigned short*) data, (Three_width * Three_height) / 2);
     spr_index+=(Three_width*Three_height)/2;
 
-    * load Four into sprite image memory *
+    data=correctData((unsigned short*) Four_data,
+            Four_height*Four_width,241);
+    /* load Four into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Four_data, (Four_width * Four_height) / 2);
+    (unsigned short*) data, (Four_width * Four_height) / 2);
     spr_index+=(Four_width*Four_height)/2;
 
-    * load Five into sprite image memory *
+    data=correctData((unsigned short*) Five_data,
+            Five_height*Five_width,241);
+    /* load Five into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Five_data, (Five_width * Five_height) / 2);
+    (unsigned short*) data, (Five_width * Five_height) / 2);
     spr_index+=(Five_width*Five_height)/2;
 
-    * load Six into sprite image memory *
+    data=correctData((unsigned short*) Six_data,
+            Six_height*Six_width,241);
+    /* load Six into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Six_data, (Six_width * Six_height) / 2);
+    (unsigned short*) data, (Six_width * Six_height) / 2);
     spr_index+=(Six_width*Six_height)/2;
 
-    * load Seven into sprite image memory *
+    data=correctData((unsigned short*) Seven_data,
+            Seven_height*Seven_width,241);
+    /* load Seven into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Seven_data, (Seven_width * Seven_height) / 2);
+    (unsigned short*) data, (Seven_width * Seven_height) / 2);
+    spr_index+=(Seven_width*Seven_height)/2;
+
+    data=correctData((unsigned short*) Eight_data,
+            Eight_height*Eight_width,241);
+    /* load Eight into sprite image memory */
+    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
+    (unsigned short*) data, (Eight_width * Eight_height) / 2);
     spr_index+=(Eight_width*Eight_height)/2;
 
-    * load Eight into sprite image memory *
+    data=correctData((unsigned short*) Nine_data,
+            Nine_height*Nine_width,241);
+    /* load Nine into sprite image memory */
     memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Eight_data, (Eight_width * Eight_height) / 2);
-    spr_index+=(Eight_width*Eight_height)/2;
-
-    * load Nine into sprite image memory *
-    memcpy16_dma((unsigned short*) sprite_image_memory+spr_index, 
-    (unsigned short*) Nine_data, (Nine_width * Nine_height) / 2);
-    spr_index+=(Nine_width*Nine_height)/2; */
+    (unsigned short*) data, (Nine_width * Nine_height) / 2);
 }
 
 /* finds which tile a screen coordinate maps to, 
@@ -789,7 +789,7 @@ int main() {
     struct Enemy* boss;
     enemy_init(boss,96,0,Boss);
     
-/*    struct Enemy* enemy1;
+    struct Enemy* enemy1;
     enemy_init(enemy1,32,0,Enemy1);
 
     struct Enemy* enemy2;
@@ -833,7 +833,7 @@ int main() {
 
     struct Number* nine;
     num_init(nine,104,32,Nine);
-*/
+
     /* set initial scroll to 0 */
     int xscroll = 0;
     int yscroll = 0;
