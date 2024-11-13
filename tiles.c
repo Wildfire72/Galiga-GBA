@@ -793,7 +793,7 @@ int main() {
     enemy1_B->x = 112;
     enemy1_B->y = 0;
     sprite_position(enemy1_B->sprite,enemy1_B->x,enemy1_B->y);
-    /*
+   /* 
     enemy1_C->x = 172;
     enemy1_C->y = 0;
     sprite_position(enemy1_C->sprite,enemy1_C->x,enemy1_C->y);
