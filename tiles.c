@@ -639,9 +639,9 @@ void delay(unsigned int amount) {
     for (int i = 0; i < amount * 10; i++);
 }
 
-void handle_buttons(){
-    /* scroll with the arrow keys */
-   /* if (button_pressed(BUTTON_DOWN)) {
+/*void handle_buttons(){
+     scroll with the arrow keys 
+    if (button_pressed(BUTTON_DOWN)) {
         yscroll++;
     }
     if (button_pressed(BUTTON_UP)) {
@@ -653,8 +653,8 @@ void handle_buttons(){
     }
     if (button_pressed(BUTTON_LEFT)) {
         xscroll--;
-    } */
-}
+    } 
+} */
 
 void scrollBG1(int* xscroll, int* yscroll){
     *bg1_x_scroll = *xscroll * 2;
@@ -672,6 +672,14 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
         *count=0;
     }
 }
+
+void player_update(struct Player* player) {
+    sprite_position(player->sprite, player->x, player->y);
+}
+
+
+
+
 
 /* the main function */
 int main() {
@@ -852,15 +860,23 @@ int main() {
 
     /* loop forever */
     while (1) {
+        player_update(player); 
+
+        if(button_pressed(BUTTON_RIGHT)){
+            player->x += 1;
+            sprite_move(player->sprite, 1, 0);
+        } else if (button_pressed(BUTTON_LEFT)){
+            player->x -= 1; 
+            sprite_move(player->sprite, -1, 0);
+        }        
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
         /* set on screen position */
-        sprite_position(player->sprite, player->x, player->y);
         sprite_update_all();
 
         /* wait for vblank before scrolling */
         wait_vblank();
-        
+        sprite_position(player->sprite, player->x, player->y);
         /* delay some */
         delay(200);
     }
