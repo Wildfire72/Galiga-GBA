@@ -187,54 +187,6 @@ enum SpriteSize {
     SIZE_32_64
 };
 
-/* initialize the koopa */
-void player_init(struct Player* koopa) {
-    koopa->x = 100;
-    koopa->y = 113;
-    koopa->yvel = 0;
-    koopa->border = 40;
-    koopa->frame = 0;
-    koopa->move = 0;
-    koopa->counter = 0;
-    koopa->animation_delay = 8;
-    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
-            koopa->frame, 0);
-}
-
-/* initialize an enemy */
-void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
-    koopa->x = x;
-    koopa->y = y;
-    koopa->yvel = 0;
-    koopa->border = 40;
-    koopa->frame = 0;
-    koopa->move = 0;
-    koopa->counter = 0;
-    koopa->animation_delay = 8;
-    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
-            offset, 0);
-}
-
-void num_init(struct Number* num,int x, int y, int offset){
-    num->x=x;
-    num->y=y;
-    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
-            offset, 0);
-}
-
-void bullet_init(struct Bullet* num,int x, int y,int offset){
-    num->x=x;
-    num->y=y;
-    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
-            offset, 0);
-}
-
-void score_init(struct Number* num,int x, int y){
-    num->x=x;
-    num->y=y;
-    num->sprite=sprite_init(num->x, num->y, SIZE_8_32, 0, 0, 
-        Score, 0);
-}
 
 /* function to initialize a sprite with its properties, and return a pointer */
 struct Sprite* sprite_init(int x, int y, enum SpriteSize size,
@@ -289,7 +241,56 @@ struct Sprite* sprite_init(int x, int y, enum SpriteSize size,
     return &sprites[index];
 }
 
-/* update all of the spries on the screen */
+/* initialize the koopa */
+void player_init(struct Player* koopa) {
+    koopa->x = 100;
+    koopa->y = 113;
+    koopa->yvel = 0;
+    koopa->border = 40;
+    koopa->frame = 0;
+    koopa->move = 0;
+    koopa->counter = 0;
+    koopa->animation_delay = 8;
+    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
+            koopa->frame, 0);
+}
+
+/* initialize an enemy */
+void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
+    koopa->x = x;
+    koopa->y = y;
+    koopa->yvel = 0;
+    koopa->border = 40;
+    koopa->frame = 0;
+    koopa->move = 0;
+    koopa->counter = 0;
+    koopa->animation_delay = 8;
+    koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
+            offset, 0);
+}
+
+void num_init(struct Number* num,int x, int y, int offset){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
+            offset, 0);
+}
+
+void bullet_init(struct Bullet* num,int x, int y,int offset){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
+            offset, 0);
+}
+
+void score_init(struct Number* num,int x, int y){
+    num->x=x;
+    num->y=y;
+    num->sprite=sprite_init(num->x, num->y, SIZE_8_32, 0, 0, 
+        Score, 0);
+}
+
+/* update all of the sprites on the screen */
 void sprite_update_all() {
     /* copy them all over */
     memcpy16_dma((unsigned short*) sprite_attribute_memory, 
@@ -376,6 +377,80 @@ void setup_sprite_image() {
     memcpy16_dma((unsigned short*) sprite_image_memory, 
     (unsigned short*) Merged_data, (Merged_width * Merged_height) / 2);
 }
+
+
+void spawn_formation1(struct Enemy* enemy1s[], int size) {
+    struct Enemy* enemy1_A = enemy1s[0];
+    enemy1_A->x = 52;
+    enemy1_A->y = 0;
+    sprite_position(enemy1_A->sprite,52,0);
+    struct Enemy* enemy1_B = enemy1s[1];
+    enemy1_B->x = 112;
+    enemy1_B->y = 0;
+    sprite_position(enemy1_B->sprite,112,0);
+    struct Enemy* enemy1_C = enemy1s[2];
+    enemy1_C->x = 172;
+    enemy1_C->y = 0;
+    sprite_position(enemy1_C->sprite,172,0);
+}
+
+void spawn_formation2() {
+    struct Enemy* enemy1_A;
+    enemy_init(enemy1_A,40,0,Enemy1);
+    struct Enemy* enemy1_B;
+    enemy_init(enemy1_B,80,0,Enemy1);
+    struct Enemy* enemy1_C;
+    enemy_init(enemy1_C,120,0,Enemy1);
+    struct Enemy* enemy1_D;
+    enemy_init(enemy1_D,160,0,Enemy1);
+    struct Enemy* enemy1_E;
+    enemy_init(enemy1_E,200,0,Enemy1);
+}
+
+void spawn_formation3() {
+    struct Enemy* enemy1_A;
+    enemy_init(enemy1_A,40,0,Enemy1);
+    struct Enemy* enemy1_B;
+    enemy_init(enemy1_B,80,0,Enemy1);
+    struct Enemy* enemy1_C;
+    enemy_init(enemy1_C,120,0,Enemy1);
+    struct Enemy* enemy1_D;
+    enemy_init(enemy1_D,160,0,Enemy1);
+    struct Enemy* enemy1_E;
+    enemy_init(enemy1_E,200,0,Enemy1);
+    struct Enemy* enemy1_F;
+    enemy_init(enemy1_F,60,10,Enemy1);
+    struct Enemy* enemy1_G;
+    enemy_init(enemy1_G,100,10,Enemy1);
+    struct Enemy* enemy1_H;
+    enemy_init(enemy1_H,140,10,Enemy1);
+    struct Enemy* enemy1_I;
+    enemy_init(enemy1_I,180,10,Enemy1);
+}
+
+void spawn_formation4() {
+    struct Enemy* enemy1_A;
+    enemy_init(enemy1_A,30,0,Enemy1);
+    struct Enemy* enemy1_B;
+    enemy_init(enemy1_B,60,0,Enemy1);
+    struct Enemy* enemy1_C;
+    enemy_init(enemy1_C,90,0,Enemy1);
+    struct Enemy* enemy1_D;
+    enemy_init(enemy1_D,120,0,Enemy1);
+    struct Enemy* enemy1_E;
+    enemy_init(enemy1_E,150,0,Enemy1);
+    struct Enemy* enemy1_F;
+    enemy_init(enemy1_F,180,0,Enemy1);
+    struct Enemy* enemy1_G;
+    enemy_init(enemy1_G,210,0,Enemy1);
+    struct Enemy* enemy2_H;
+    enemy_init(enemy2_H,0,0,Enemy2);
+    struct Enemy* enemy2_I;
+    enemy_init(enemy2_I,140,0,Enemy2);
+    struct Enemy* enemy2_J;
+    enemy_init(enemy2_J,180,0,Enemy2);
+}
+
 
 /* finds which tile a screen coordinate maps to, 
  * taking scroll into account */
@@ -612,6 +687,7 @@ int main() {
     struct Player* player;
     player_init(player);
 
+    /*
     struct Enemy* boss;
     enemy_init(boss,96,0,Boss);
     
@@ -620,6 +696,115 @@ int main() {
 
     struct Enemy* enemy2;
     enemy_init(enemy2,64,0,Enemy2);
+    
+    struct Enemy* enemy1s[15];
+    initializeAll_Enemy1(enemy1s, 15);
+    struct Enemy* enemy2s[15];
+    initializeAll_Enemy2(enemy2s, 15);
+    struct Enemy* bosses[5];
+    initializeAll_Boss(bosses, 5);    
+    
+    //spawn_formation1(enemy1s, 15);
+
+    */
+    
+    // Initialize all enemy 1s
+    struct Enemy* enemy1_A;
+    enemy_init(enemy1_A,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_B;
+    enemy_init(enemy1_B,WIDTH,HEIGHT,Enemy1);
+    /*
+    struct Enemy* enemy1_C;
+    enemy_init(enemy1_C,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_D;
+    enemy_init(enemy1_D,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_E;
+    enemy_init(enemy1_E,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_F;
+    enemy_init(enemy1_F,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_G;
+    enemy_init(enemy1_G,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_H;
+    enemy_init(enemy1_H,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_I;
+    enemy_init(enemy1_I,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_J;
+    enemy_init(enemy1_J,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_K;
+    enemy_init(enemy1_K,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_L;
+    enemy_init(enemy1_L,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_M;
+    enemy_init(enemy1_M,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_N;
+    enemy_init(enemy1_N,WIDTH,HEIGHT,Enemy1);
+    struct Enemy* enemy1_O;
+    enemy_init(enemy1_O,WIDTH,HEIGHT,Enemy1);
+
+    // Initialize all enemy 2s
+    struct Enemy* enemy2_A;
+    enemy_init(enemy2_A,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_B;
+    enemy_init(enemy2_B,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_C;
+    enemy_init(enemy2_C,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_D;
+    enemy_init(enemy2_D,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_E;
+    enemy_init(enemy2_E,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_F;
+    enemy_init(enemy2_F,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_G;
+    enemy_init(enemy2_G,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_H;
+    enemy_init(enemy2_H,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_I;
+    enemy_init(enemy2_I,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_J;
+    enemy_init(enemy2_J,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_K;
+    enemy_init(enemy2_K,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_L;
+    enemy_init(enemy2_L,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_M;
+    enemy_init(enemy2_M,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_N;
+    enemy_init(enemy2_N,WIDTH,HEIGHT,Enemy2);
+    struct Enemy* enemy2_O;
+    enemy_init(enemy2_O,WIDTH,HEIGHT,Enemy2);
+
+    // Initialize all bosses
+    struct Enemy* boss_A;
+    enemy_init(boss_A,WIDTH,HEIGHT,Boss);
+    struct Enemy* boss_B;
+    enemy_init(boss_B,WIDTH,HEIGHT,Boss);
+    struct Enemy* boss_C;
+    enemy_init(boss_C,WIDTH,HEIGHT,Boss);
+    struct Enemy* boss_D;
+    enemy_init(boss_D,WIDTH,HEIGHT,Boss);
+    struct Enemy* boss_E;
+    enemy_init(boss_E,WIDTH,HEIGHT,Boss);
+    */
+
+    enemy1_A->x = 52;
+    enemy1_A->y = 0;
+    sprite_position(enemy1_A->sprite,enemy1_A->x,enemy1_A->y);
+    
+    enemy1_B->x = 112;
+    enemy1_B->y = 0;
+    sprite_position(enemy1_B->sprite,enemy1_B->x,enemy1_B->y);
+    /*
+    enemy1_C->x = 172;
+    enemy1_C->y = 0;
+    sprite_position(enemy1_C->sprite,enemy1_C->x,enemy1_C->y);
+    */
+
+    struct Enemy* enemy1Test;
+    enemy_init(enemy1Test,WIDTH,HEIGHT,Enemy1);
+    enemy1Test->x = 120;
+    enemy1Test->y = 60;
+    sprite_position(enemy1Test->sprite,enemy1Test->x,enemy1Test->y);
+
 
     struct Bullet* pBullet;
     bullet_init(pBullet,128,0,PlayerBullet);
