@@ -378,6 +378,17 @@ void setup_sprite_image() {
     (unsigned short*) Merged_data, (Merged_width * Merged_height) / 2);
 }
 
+void initializeAll_Enemy1(struct Enemy enemy1Array[], int size) {
+    struct Enemy enemy1_A;
+    enemy_init(&enemy1_A,WIDTH,HEIGHT,Enemy1);
+    enemy1Array[0] = enemy1_A;
+    struct Enemy enemy1_B;
+    enemy_init(&enemy1_B,WIDTH,HEIGHT,Enemy1);
+    enemy1Array[1] = enemy1_B;
+    struct Enemy enemy1_C;
+    enemy_init(&enemy1_C,WIDTH,HEIGHT,Enemy1);
+    enemy1Array[2] = enemy1_C;
+}
 
 void spawn_formation1(struct Enemy* enemy1s[], int size) {
     struct Enemy* enemy1_A = enemy1s[0];
@@ -692,8 +703,8 @@ int main() {
 
     setup_sprite_image();
     sprite_clear();
-    struct Player* player;
-    player_init(player);
+    struct Player player;
+    player_init(&player);
 
     /*
     struct Enemy* boss;
@@ -717,13 +728,7 @@ int main() {
     */
     
     // Initialize all enemy 1s
-    struct Enemy* enemy1_A;
-    enemy_init(enemy1_A,WIDTH,HEIGHT,Enemy1);
-    struct Enemy* enemy1_B;
-    enemy_init(enemy1_B,WIDTH,HEIGHT,Enemy1);
-    /*
-    struct Enemy* enemy1_C;
-    enemy_init(enemy1_C,WIDTH,HEIGHT,Enemy1);
+   /*
     struct Enemy* enemy1_D;
     enemy_init(enemy1_D,WIDTH,HEIGHT,Enemy1);
     struct Enemy* enemy1_E;
@@ -794,64 +799,61 @@ int main() {
     enemy_init(boss_E,WIDTH,HEIGHT,Boss);
     */
 
-    enemy1_A->x = 52;
-    enemy1_A->y = 0;
-    sprite_position(enemy1_A->sprite,enemy1_A->x,enemy1_A->y);
+    struct Enemy enemy1s[15];
+    initializeAll_Enemy1(enemy1s, 15);
     
-    enemy1_B->x = 112;
-    enemy1_B->y = 0;
-    sprite_position(enemy1_B->sprite,enemy1_B->x,enemy1_B->y);
-   /* 
-    enemy1_C->x = 172;
-    enemy1_C->y = 0;
-    sprite_position(enemy1_C->sprite,enemy1_C->x,enemy1_C->y);
-    */
-
-    struct Enemy* enemy1Test;
-    enemy_init(enemy1Test,WIDTH,HEIGHT,Enemy1);
-    enemy1Test->x = 120;
-    enemy1Test->y = 60;
-    sprite_position(enemy1Test->sprite,enemy1Test->x,enemy1Test->y);
+    struct Enemy enemy1_A = enemy1s[0];
+    enemy1_A.x = 52;
+    enemy1_A.y = 0;
+    sprite_position(enemy1_A.sprite,enemy1_A.x,enemy1_A.y);
+    struct Enemy enemy1_B = enemy1s[1];
+    enemy1_B.x = 112;
+    enemy1_B.y = 0;
+    sprite_position(enemy1_B.sprite,enemy1_B.x,enemy1_B.y);
+    struct Enemy enemy1_C = enemy1s[2];
+    enemy1_C.x = 172;
+    enemy1_C.y = 0;
+    sprite_position(enemy1_C.sprite,enemy1_C.x,enemy1_C.y);
 
 
-    struct Bullet* pBullet;
-    bullet_init(pBullet,128,0,PlayerBullet);
+    struct Bullet pBullet;
+    bullet_init(&pBullet,128,0,PlayerBullet);
 
-    struct Bullet* eBullet;
-    bullet_init(eBullet,136,0,EnemyBullet);
+    struct Bullet eBullet;
+    bullet_init(&eBullet,136,0,EnemyBullet);
 
-    struct Number* score;
-    score_init(score,0,32);
+    struct Number score;
+    score_init(&score,0,32);
 
-    struct Number* zero;
-    num_init(zero,32,32,Zero);
+    struct Number zero;
+    num_init(&zero,32,32,Zero);
 
-    struct Number* one;
-    num_init(one,40,32,One);
+    struct Number one;
+    num_init(&one,40,32,One);
 
-    struct Number* two;
-    num_init(two,48,32,Two);
+    struct Number two;
+    num_init(&two,48,32,Two);
 
-    struct Number* three;
-    num_init(three,56,32,Three);
+    struct Number three;
+    num_init(&three,56,32,Three);
 
-    struct Number* four;
-    num_init(four,64,32,Four);
+    struct Number four;
+    num_init(&four,64,32,Four);
 
-    struct Number* five;
-    num_init(five,72,32,Five);
+    struct Number five;
+    num_init(&five,72,32,Five);
 
-    struct Number* six;
-    num_init(six,80,32,Six);
+    struct Number six;
+    num_init(&six,80,32,Six);
 
-    struct Number* seven;
-    num_init(seven,88,32,Seven);
+    struct Number seven;
+    num_init(&seven,88,32,Seven);
 
-    struct Number* eight;
-    num_init(eight,96,32,Eight);
+    struct Number eight;
+    num_init(&eight,96,32,Eight);
 
-    struct Number* nine;
-    num_init(nine,104,32,Nine);
+    struct Number nine;
+    num_init(&nine,104,32,Nine);
 
     /* set initial scroll to 0 */
     int xscroll = 0;
@@ -860,14 +862,14 @@ int main() {
 
     /* loop forever */
     while (1) {
-        player_update(player); 
+        player_update(&player); 
 
         if(button_pressed(BUTTON_RIGHT)){
-            player->x += 1;
-            sprite_move(player->sprite, 1, 0);
+            player.x += 1;
+            sprite_move(player.sprite, 1, 0);
         } else if (button_pressed(BUTTON_LEFT)){
-            player->x -= 1; 
-            sprite_move(player->sprite, -1, 0);
+            player.x -= 1; 
+            sprite_move(player.sprite, -1, 0);
         }        
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
@@ -876,7 +878,7 @@ int main() {
 
         /* wait for vblank before scrolling */
         wait_vblank();
-        sprite_position(player->sprite, player->x, player->y);
+        sprite_position(player.sprite, player.x, player.y);
         /* delay some */
         delay(200);
     }
