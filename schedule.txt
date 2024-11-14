@@ -6,7 +6,7 @@ scrolling background - 8 - Matt ---DONE
 Make .h file for sprites - 9 - Dylan ---DONE
 Make sprites - 10 - Matt
 Sprite helper functions (to find indexes of sprites)- 10 - Matt
-Spawning enemies - 12 - Bethanie
+Spawning enemies - 12 - Bethanie ---DONE
 movement of all sprites - 14 - Dylan
 Collsion - 16 - Bethanie
 deleting bullets - 18 - Matt
