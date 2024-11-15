@@ -32,19 +32,19 @@
 #define Boss 8
 #define Enemy1 16
 #define Enemy2 24
-#define Score 32
-#define EnemyBullet 36
-#define PlayerBullet 38
-#define Zero 40
-#define One 42
-#define Two 44
-#define Three 46
-#define Four 48
-#define Five 50
-#define Six 52
-#define Seven 54
-#define Eight 56
-#define Nine 58
+#define SCORE 32
+#define EnemyBullet 40
+#define PlayerBullet 42
+#define Zero 44
+#define One 46
+#define Two 48
+#define Three 50
+#define Four 52
+#define Five 54
+#define Six 56
+#define Seven 58
+#define Eight 60
+#define Nine 62
 
 /* flags to set sprite handling in display control register */
 #define SPRITE_MAP_2D 0x0
@@ -125,11 +125,12 @@ struct Player {
     int health;
 };
 
-/* used for numbers and Score*/
+/* used for numbers*/
 struct Number{
     struct Sprite* sprite;
     int x,y;
 };
+
 
 /* a struct for an enemies's logic and behavior */
 struct Enemy {
@@ -286,8 +287,8 @@ void bullet_init(struct Bullet* num,int x, int y,int offset){
 void score_init(struct Number* num,int x, int y){
     num->x=x;
     num->y=y;
-    num->sprite=sprite_init(num->x, num->y, SIZE_8_32, 0, 0, 
-        Score, 0);
+    num->sprite=sprite_init(num->x, num->y, SIZE_32_8, 0, 0, 
+        SCORE, 0);
 }
 
 /* update all of the sprites on the screen */
@@ -879,10 +880,10 @@ int main() {
     spawn_EnemyFormation(7, enemy1s, enemy2s, bosses);
     
     struct Bullet pBullet;
-    bullet_init(&pBullet,128,0,PlayerBullet);
+    bullet_init(&pBullet,128,64,PlayerBullet);
 
     struct Bullet eBullet;
-    bullet_init(&eBullet,136,0,EnemyBullet);
+    bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Number score;
     score_init(&score,0,32);
