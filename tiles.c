@@ -863,17 +863,23 @@ int main() {
     int xscroll = 0;
     int yscroll = 0;
     int scrollCount = 0;
-
+    int bulletCount = 0;
     /* loop forever */
     while (1) {
         player_update(&player); 
-
+        
+        if(bulletCount > 0){
+            sprite_move(zero.sprite, 0, -1); 
+        }
         if(button_pressed(BUTTON_RIGHT)){
             player.x += 1;
             sprite_move(player.sprite, 1, 0);
         } else if (button_pressed(BUTTON_LEFT)){
             player.x -= 1; 
             sprite_move(player.sprite, -1, 0);
+        } else if (button_pressed(BUTTON_SELECT)){
+            num_init(&zero, (player.x + 4), (player.y - 2), Zero);
+            bulletCount += 1; 
         }        
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
@@ -882,7 +888,7 @@ int main() {
 
         /* wait for vblank before scrolling */
         wait_vblank();
-        sprite_position(player.sprite, player.x, player.y);
+        sprite_position(player.sprite, player.x , player.y);
         /* delay some */
         delay(200);
     }
