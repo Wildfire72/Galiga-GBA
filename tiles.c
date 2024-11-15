@@ -804,6 +804,11 @@ void enemy_update(struct Enemy* enemy) {
     }
 }
 
+void enemy_death(struct Enemy* enemy) {
+    enemy->counter = 0;
+    sprite_position(enemy->sprite, WIDTH, HEIGHT); 
+}
+
 /* update an enemy formation */
 void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
     if (formationNum == 1) {
