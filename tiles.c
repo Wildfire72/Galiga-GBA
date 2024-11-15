@@ -268,7 +268,7 @@ void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
     koopa->frame = 0;
     koopa->move = 0;
     koopa->counter = 0;
-    koopa->animation_delay = 8;
+    koopa->animation_delay = 6;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             offset, 0);
 }
@@ -410,10 +410,9 @@ void spawn_formation1(struct Enemy enemy1s[]) {
     int xStart = 52;
     int xOffset = 60;
     for (int i = 0; i < 3; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = xStart + (xOffset * i);
-        enemy1.y = 0;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = xStart + (xOffset * i);
+        enemy1s[i].y = -16;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
 }
 
@@ -421,10 +420,9 @@ void spawn_formation2(struct Enemy enemy1s[]) {
     int xStart = 32;
     int xOffset = 32;
     for (int i = 0; i < 6; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = xStart + (xOffset * i);
-        enemy1.y = 0;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = xStart + (xOffset * i);
+        enemy1s[i].y = -16;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
 }
 
@@ -432,18 +430,16 @@ void spawn_formation3(struct Enemy enemy1s[]) {
     int r1_xStart = 40;
     int r1_xOffset = 36;
     for (int i = 0; i < 5; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = r1_xStart + (r1_xOffset * i);
-        enemy1.y = 0;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = r1_xStart + (r1_xOffset * i);
+        enemy1s[i].y = -28;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
     int r2_xStart = 58;
     int r2_xOffset = 36;
     for (int i = 5; i < 9; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = r2_xStart + (r2_xOffset * (i - 5));
-        enemy1.y = 12;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = r2_xStart + (r2_xOffset * (i - 5));
+        enemy1s[i].y = -16;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     } 
 }
 
@@ -451,17 +447,15 @@ void spawn_formation4(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
     int xOffset = 28;
     int r1_xStart = 14;
     for (int i = 0; i < 8; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = r1_xStart + (xOffset * i);
-        enemy1.y = 0;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = r1_xStart + (xOffset * i);
+        enemy1s[i].y = -28;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
     int r2_xStart = 56;
     for (int i = 0; i < 5; i++) {
-        struct Enemy enemy2 = enemy2s[i];
-        enemy2.x = r2_xStart + (xOffset * i);
-        enemy2.y = 12;
-        sprite_position(enemy2.sprite,enemy2.x,enemy2.y);
+        enemy2s[i].x = r2_xStart + (xOffset * i);
+        enemy2s[i].y = -16;
+        sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
     } 
 }
 
@@ -469,50 +463,45 @@ void spawn_formation5(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
     int xOffset = 20;
     int e1_xStart = 52;
     for (int i = 0; i < 7; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = e1_xStart + (xOffset * i);
+        enemy1s[i].x = e1_xStart + (xOffset * i);
         if (i % 2 == 0) {
-            enemy1.y = 0;
+            enemy1s[i].y = -32;
         } else {
-            enemy1.y = 16;
+            enemy1s[i].y = -16;
         }
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
     int e2_xStart = 32;
     for (int i = 0; i < 9; i++) {
-        struct Enemy enemy2 = enemy2s[i];
-        enemy2.x = e2_xStart + (xOffset * i);
+        enemy2s[i].x = e2_xStart + (xOffset * i);
         if (i % 2 == 0) {
-            enemy2.y = 0;
+            enemy2s[i].y = -32;
         } else {
-            enemy2.y = 16;
+            enemy2s[i].y = -16;
         }
-        sprite_position(enemy2.sprite,enemy2.x,enemy2.y);
-    } 
+        sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
+    }
 }
 
 void spawn_formation6(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
     int xOffset = 24;
     int r1_xStart = 16;
     for (int i = 0; i < 9; i++) {
-        struct Enemy enemy2 = enemy2s[i];
-        enemy2.x = r1_xStart + (xOffset * i);
-        enemy2.y = 0;
-        sprite_position(enemy2.sprite,enemy2.x,enemy2.y);
+        enemy2s[i].x = r1_xStart + (xOffset * i);
+        enemy2s[i].y = -36;
+        sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
     }
     int r2_xStart = 28;
     for (int i = 0; i < 8; i++) {
-        struct Enemy enemy1 = enemy1s[i];
-        enemy1.x = r2_xStart + (xOffset * i);
-        enemy1.y = 10;
-        sprite_position(enemy1.sprite,enemy1.x,enemy1.y);
+        enemy1s[i].x = r2_xStart + (xOffset * i);
+        enemy1s[i].y = -26;
+        sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
     }
     int r3_xStart = 40;
     for (int i = 9; i < 16; i++) {
-        struct Enemy enemy2 = enemy2s[i];
-        enemy2.x = r3_xStart + (xOffset * (i - 9));
-        enemy2.y = 20;
-        sprite_position(enemy2.sprite,enemy2.x,enemy2.y);
+        enemy2s[i].x = r3_xStart + (xOffset * (i - 9));
+        enemy2s[i].y = -16;
+        sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
     }
 }
 
@@ -533,7 +522,7 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             enemy2Index++;
         }
         currEnemy.x = r1_xStart + (xOffset * i);
-        currEnemy.y = 0;
+        currEnemy.y = -44;
         sprite_position(currEnemy.sprite,currEnemy.x,currEnemy.y);
     }
     int r2_xStart = 40;
@@ -547,7 +536,7 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             enemy2Index++;
         }
         currEnemy.x = r2_xStart + (xOffset * i);
-        currEnemy.y = 14;
+        currEnemy.y = -30;
         sprite_position(currEnemy.sprite,currEnemy.x,currEnemy.y);
     }
     int r3_xStart = 76;
@@ -561,11 +550,28 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             enemy2Index++;
         }
         currEnemy.x = r3_xStart + (xOffset * i);
-        currEnemy.y = 28;
+        currEnemy.y = -16;
         sprite_position(currEnemy.sprite,currEnemy.x,currEnemy.y);
     }
 }
 
+void spawn_EnemyFormation(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
+    if (formationNum == 1) {
+        spawn_formation1(enemy1s);
+    } else if (formationNum == 2) {
+        spawn_formation2(enemy1s);
+    } else if (formationNum == 3) {
+        spawn_formation3(enemy1s);
+    } else if (formationNum == 4) {
+        spawn_formation4(enemy1s, enemy2s);
+    } else if (formationNum == 5) {
+        spawn_formation5(enemy1s, enemy2s);
+    } else if (formationNum == 6) {
+        spawn_formation6(enemy1s, enemy2s);
+    } else if (formationNum == 7) {
+        spawn_formation7(enemy1s, enemy2s, bosses);
+    }
+}
 
 /* finds which tile a screen coordinate maps to, 
  * taking scroll into account */
@@ -788,12 +794,70 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
     }
 }
 
+/* update the player sprite  */
 void player_update(struct Player* player) {
     sprite_position(player->sprite, player->x, player->y);
 }
 
+/* update an enemy sprite */
+void enemy_update(struct Enemy* enemy) {
+    enemy->counter++;
+    if (enemy->counter >= enemy->animation_delay) {
+        sprite_move(enemy->sprite, 0, 1);
+        enemy->counter = 0;
+    }
+}
 
+void enemy_death(struct Enemy* enemy) {
+    enemy->counter = 0;
+    sprite_position(enemy->sprite, WIDTH, HEIGHT); 
+}
 
+/* update an enemy formation */
+void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
+    if (formationNum == 1) {
+        for (int i = 0; i < 3; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+    } else if (formationNum == 2) {
+        for (int i = 0; i < 6; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+    } else if (formationNum == 3) {
+        for (int i = 0; i < 9; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+    } else if (formationNum == 4) {
+        for (int i = 0; i < 8; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+        for (int i = 0; i < 5; i++) {
+            enemy_update(&enemy2s[i]);
+        }
+    } else if (formationNum == 5) {
+        for (int i = 0; i < 7; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+        for (int i = 0; i < 9; i++) {
+            enemy_update(&enemy2s[i]);
+        }
+    } else if (formationNum == 6) {
+        for (int i = 0; i < 8; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+        for (int i = 0; i < 16; i++) {
+            enemy_update(&enemy2s[i]);
+        }
+    } else if (formationNum == 7) {
+        for (int i = 0; i < 17; i++) {
+            enemy_update(&enemy1s[i]);
+        }
+        for (int i = 0; i < 9; i++) {
+            enemy_update(&enemy2s[i]);
+        }
+        enemy_update(&bosses[0]);
+    }
+}
 
 /* the main function */
 int main() {
@@ -816,13 +880,7 @@ int main() {
     struct Enemy bosses[3];
     initializeAll_Boss(bosses, 3);    
 
-    //spawn_formation1(enemy1s);
-    //spawn_formation2(enemy1s);
-    //spawn_formation3(enemy1s);
-    //spawn_formation4(enemy1s, enemy2s);
-    //spawn_formation5(enemy1s, enemy2s);
-    //spawn_formation6(enemy1s, enemy2s);
-    spawn_formation7(enemy1s, enemy2s, bosses);
+    spawn_EnemyFormation(7, enemy1s, enemy2s, bosses);
     
     struct Bullet pBullet;
     bullet_init(&pBullet,128,64,PlayerBullet);
@@ -879,6 +937,8 @@ int main() {
             player.x -= 1; 
             sprite_move(player.sprite, -1, 0);
         }        
+
+        formation_update(7, enemy1s, enemy2s, bosses);
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
         /* set on screen position */
