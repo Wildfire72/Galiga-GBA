@@ -88,6 +88,9 @@ void memcpy16_dma(unsigned short* dest, unsigned short* source ,int amount){
     *dma_count = amount | DMA_16 | DMA_ENABLE;
 }
 
+/*declaration of increaseScore*/
+int increaseScore(int score,int amt);
+
 /* a sprite is a moveable image on the screen */
 struct Sprite {
     unsigned short attribute0;
