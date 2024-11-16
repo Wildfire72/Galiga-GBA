@@ -33,8 +33,8 @@
 #define Enemy1 16
 #define Enemy2 24
 #define SCORE 32
-#define EnemyBullet 40
-#define PlayerBullet 42
+#define EnemyBullet 42
+#define PlayerBullet 40
 #define Zero 44
 #define One 46
 #define Two 48
@@ -168,6 +168,10 @@ struct Enemy {
 struct Bullet{
     struct Sprite* sprite;
     int x,y;
+    
+    int yvel;    
+
+    int active; 
 };
 
 
@@ -283,9 +287,22 @@ void num_init(struct Number* num,int x, int y, int offset){
 void bullet_init(struct Bullet* num,int x, int y,int offset){
     num->x=x;
     num->y=y;
+    num->active=0;
+    num->yvel=0;  
     num->sprite=sprite_init(num->x, num->y, SIZE_8_8, 0, 0, 
             offset, 0);
 }
+
+void init_bullets(struct Bullet pBullets[], int size){
+    for( int i = 0; i < size; i++){
+        struct Bullet pbullet;
+        bullet_init(&pbullet, WIDTH /2, 0, PlayerBullet); 
+        pBullets[i] = pbullet;  
+    }
+} 
+
+
+
 
 void score_init(struct Number* num,int x, int y){
     num->x=x;
@@ -794,10 +811,36 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
     }
 }
 
+void update_bullet(struct Bullet* pbullet) {
+   // if the bullet has been fired and hits top of the screen, reset the bullet
+    if(pbullet->active == 1 && pbullet->y <=0){
+        pbullet->active = 0;
+        pbullet->yvel = 0;
+        sprite_position(pbullet->sprite, -16, -16);
+    //if the bullet has been fired and hasn't hit top, keep moving          
+    }else if(pbullet->active == 1 && pbullet->y > 0){
+        sprite_move(pbullet->sprite, 0, pbullet->yvel);
+    }else if(pbullet->active == 0){
+        sprite_position(pbullet->sprite, 0 , -16);
+    }
+}
+
+void update_bullets(struct Bullet pBullets[]){
+     for(int i = 0; i < 5; i++){
+        update_bullet(&pBullets[i]);
+     } 
+}
+
+
+
 /* update the player sprite  */
 void player_update(struct Player* player) {
     sprite_position(player->sprite, player->x, player->y);
 }
+
+//void Pbullet_update(struct Bullet* bullet) {
+  //  if
+//}
 
 /* update an enemy sprite */
 void enemy_update(struct Enemy* enemy) {
@@ -882,8 +925,9 @@ int main() {
 
     spawn_EnemyFormation(7, enemy1s, enemy2s, bosses);
     
-    struct Bullet pBullet;
-    bullet_init(&pBullet,128,64,PlayerBullet);
+    struct Bullet playerBullets[5];
+    
+    init_bullets(playerBullets, 5);
 
     struct Bullet eBullet;
     bullet_init(&eBullet,136,64,EnemyBullet);
@@ -930,17 +974,26 @@ int main() {
     while (1) {
         player_update(&player); 
         
-        if(bulletCount > 0){
-            sprite_move(zero.sprite, 0, -1); 
-        }
-        if(button_pressed(BUTTON_RIGHT)){
+    //    if(bulletCount > 0){
+      //      sprite_move(playerBullets[bulletCount -1].sprite, 0, -1); 
+      //  }
+        
+        update_bullets(playerBullets); 
+
+        if(button_pressed(BUTTON_RIGHT) && player.x < 224 ){
             player.x += 1;
             sprite_move(player.sprite, 1, 0);
-        } else if (button_pressed(BUTTON_LEFT)){
+        } else if (button_pressed(BUTTON_LEFT) && player.x > 0 ){
             player.x -= 1; 
             sprite_move(player.sprite, -1, 0);
         } else if (button_pressed(BUTTON_SELECT)){
-            num_init(&zero, (player.x + 4), (player.y - 2), Zero);
+            if(bulletCount >= 5){
+                bulletCount = 0;
+            }
+            playerBullets[bulletCount].active = 1;
+            playerBullets[bulletCount].yvel = -1;
+            sprite_position(playerBullets[bulletCount].sprite, player.x, player.y);
+           // bullet_init(&playerBullets[bulletCount], (player.x + 4), (player.y - 2), PlayerBullet);
             bulletCount += 1; 
         }        
 
@@ -952,9 +1005,9 @@ int main() {
 
         /* wait for vblank before scrolling */
         wait_vblank();
+
         sprite_position(player.sprite, player.x , player.y);
         /* delay some */
         delay(200);
     }
 }
-
