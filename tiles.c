@@ -816,12 +816,18 @@ void update_bullet(struct Bullet* pbullet) {
     if(pbullet->active == 1 && pbullet->y <=0){
         pbullet->active = 0;
         pbullet->yvel = 0;
-        sprite_position(pbullet->sprite, -16, -16);
+        pbullet->x = -16;
+        pbullet->y = -16;
+        sprite_position(pbullet->sprite, pbullet->x, pbullet->y);
     //if the bullet has been fired and hasn't hit top, keep moving          
     }else if(pbullet->active == 1 && pbullet->y > 0){
+        pbullet->y -= 1;
         sprite_move(pbullet->sprite, 0, pbullet->yvel);
     }else if(pbullet->active == 0){
-        sprite_position(pbullet->sprite, 0 , -16);
+        pbullet->yvel = 0;
+        pbullet->x = -16;
+        pbullet->y = -16;
+        sprite_position(pbullet->sprite, pbullet->x , pbullet->y);
     }
 }
 
@@ -974,11 +980,7 @@ int main() {
     while (1) {
         player_update(&player); 
         
-    //    if(bulletCount > 0){
-      //      sprite_move(playerBullets[bulletCount -1].sprite, 0, -1); 
-      //  }
-        
-        update_bullets(playerBullets); 
+       // update_bullets(playerBullets); 
 
         if(button_pressed(BUTTON_RIGHT) && player.x < 224 ){
             player.x += 1;
@@ -990,13 +992,16 @@ int main() {
             if(bulletCount >= 5){
                 bulletCount = 0;
             }
+            playerBullets[bulletCount].x = player.x + 4; 
+            playerBullets[bulletCount].y = player.y -2; 
             playerBullets[bulletCount].active = 1;
             playerBullets[bulletCount].yvel = -1;
-            sprite_position(playerBullets[bulletCount].sprite, player.x, player.y);
+            sprite_position(playerBullets[bulletCount].sprite, player.x + 4, player.y -2 );
            // bullet_init(&playerBullets[bulletCount], (player.x + 4), (player.y - 2), PlayerBullet);
             bulletCount += 1; 
         }        
 
+        update_bullets(playerBullets); 
         formation_update(7, enemy1s, enemy2s, bosses);
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
