@@ -832,7 +832,7 @@ void update_bullet(struct Bullet* pbullet) {
 }
 
 void update_bullets(struct Bullet pBullets[]){
-     for(int i = 0; i < 5; i++){
+     for(int i = 0; i < 20; i++){
         update_bullet(&pBullets[i]);
      } 
 }
@@ -931,9 +931,9 @@ int main() {
 
     spawn_EnemyFormation(7, enemy1s, enemy2s, bosses);
     
-    struct Bullet playerBullets[5];
+    struct Bullet playerBullets[20];
     
-    init_bullets(playerBullets, 5);
+    init_bullets(playerBullets, 20);
 
     struct Bullet eBullet;
     bullet_init(&eBullet,136,64,EnemyBullet);
@@ -980,7 +980,6 @@ int main() {
     while (1) {
         player_update(&player); 
         
-       // update_bullets(playerBullets); 
 
         if(button_pressed(BUTTON_RIGHT) && player.x < 224 ){
             player.x += 1;
@@ -989,19 +988,24 @@ int main() {
             player.x -= 1; 
             sprite_move(player.sprite, -1, 0);
         } else if (button_pressed(BUTTON_SELECT)){
-            if(bulletCount >= 5){
-                bulletCount = 0;
+           // if(bulletCount >= 5){
+            //    bulletCount = 0;
+           // }
+            for(int i = 0; i < 20; i++){
+                if(playerBullets[i].active == 0){
+                    playerBullets[i].x = player.x + 4; 
+                    playerBullets[i].y = player.y -2; 
+                    playerBullets[i].active = 1;
+                    playerBullets[i].yvel = -1;
+                    sprite_position(playerBullets[i].sprite, player.x + 4, player.y -2 );
+                   // bulletCount += 1;
+                    break;
+                }
             }
-            playerBullets[bulletCount].x = player.x + 4; 
-            playerBullets[bulletCount].y = player.y -2; 
-            playerBullets[bulletCount].active = 1;
-            playerBullets[bulletCount].yvel = -1;
-            sprite_position(playerBullets[bulletCount].sprite, player.x + 4, player.y -2 );
-           // bullet_init(&playerBullets[bulletCount], (player.x + 4), (player.y - 2), PlayerBullet);
-            bulletCount += 1; 
+           // bulletCount += 1; 
         }        
 
-        update_bullets(playerBullets); 
+        //update_bullets(playerBullets); 
         formation_update(7, enemy1s, enemy2s, bosses);
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
@@ -1011,6 +1015,7 @@ int main() {
         /* wait for vblank before scrolling */
         wait_vblank();
 
+        update_bullets(playerBullets); 
         sprite_position(player.sprite, player.x , player.y);
         /* delay some */
         delay(200);
