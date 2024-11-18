@@ -1,4 +1,4 @@
-/*
+    /*
  * tiles.c
  * program which demonstraes tile mode 0
  */
@@ -255,8 +255,8 @@ struct Sprite* sprite_init(int x, int y, enum SpriteSize size,
 
 /* initialize the koopa */
 void player_init(struct Player* koopa) {
-    koopa->x = 100;
-    koopa->y = 113;
+    koopa->x = 112;
+    koopa->y = 144;
     koopa->yvel = 0;
     koopa->border = 40;
     koopa->frame = 0;
@@ -276,7 +276,7 @@ void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
     koopa->frame = 0;
     koopa->move = 0;
     koopa->counter = 0;
-    koopa->animation_delay = 6;
+    koopa->animation_delay = 12;
     koopa->health = 10;
     koopa->isAlive = 0;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
@@ -864,7 +864,7 @@ void update_bullets(struct Bullet pBullets[]){
 }
 
 
-/* update the player sprite  */
+/* update the player sprite */
 void player_update(struct Player* player) {
     sprite_position(player->sprite, player->x, player->y);
 }
@@ -873,12 +873,44 @@ void player_update(struct Player* player) {
   //  if
 //}
 
-
 /* kill an enemy if its health has reached zero */
 void enemy_checkDeath(struct Enemy* enemy) {
     if (enemy->health <= 0) {
         enemy->isAlive = 0;
         sprite_position(enemy->sprite, WIDTH, HEIGHT);
+    }
+}
+
+/* check if a bullet has collided with an enemy */
+void bulletEnemy_Collision(struct Bullet pBullets[], struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
+    for (int i = 0; i < 20; i++) {
+        if (pBullets[i].active) {
+            for (int j = 0; j < 20; j++) {
+                if (enemy1s[j].isAlive) {
+                    if (pBullets[i].x + 4 >= enemy1s[j].x && pBullets[i].x <= enemy1s[j].x + 12 && pBullets[i].y <= enemy1s[j].y + 12) {
+                        enemy1s[j].health -= 10;
+                        enemy_checkDeath(&enemy1s[j]);
+                    }
+                }
+            }
+            for (int j = 0; j < 20; j++) {
+                if (enemy2s[j].isAlive) {
+                    if (pBullets[i].x + 4 >= enemy2s[j].x && pBullets[i].x <= enemy2s[j].x + 12 && pBullets[i].y <= enemy2s[j].y + 12) {
+                        enemy2s[j].health -= 10;
+                        enemy_checkDeath(&enemy2s[j]);
+                        sprite_position(enemy2s[j].sprite, WIDTH, HEIGHT);
+                    }
+                }
+            }
+            for (int j = 0; j < 3; j++) {
+                if (bosses[j].isAlive) {
+                    if (pBullets[i].x + 4 >= bosses[j].x && pBullets[i].x <= bosses[j].x + 12 && pBullets[i].y <= bosses[j].y + 12) {
+                        bosses[j].health -= 10;
+                        enemy_checkDeath(&bosses[j]);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -890,7 +922,6 @@ void enemy_update(struct Enemy* enemy) {
             sprite_move(enemy->sprite, 0, 1);
             enemy->counter = 0;
         }
-        enemy_checkDeath(enemy);
     }
 }
 
@@ -1067,6 +1098,11 @@ int main() {
         //update_bullets(playerBullets); 
         formation_update(7, enemy1s, enemy2s, bosses);
 
+        update_bullets(playerBullets); 
+        sprite_position(player.sprite, player.x , player.y);
+
+        bulletEnemy_Collision(playerBullets, enemy1s, enemy2s, bosses);
+
         scrollBG0(&xscroll,&yscroll,&scrollCount);
         /* set on screen position */
         sprite_update_all();
@@ -1074,8 +1110,6 @@ int main() {
         /* wait for vblank before scrolling */
         wait_vblank();
 
-        update_bullets(playerBullets); 
-        sprite_position(player.sprite, player.x , player.y);
         /* delay some */
         delay(200);
     }
