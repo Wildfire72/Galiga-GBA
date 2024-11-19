@@ -1141,7 +1141,7 @@ int main() {
             //    bulletCount = 0;
            // }
             for(int i = 0; i < 20; i++){
-                if(playerBullets[i].active == 0 && firingCounter >= 30){
+                if(playerBullets[i].active == 0 && firingCounter >= 20){
                     playerBullets[i].x = player.x + 4; 
                     playerBullets[i].y = player.y -2; 
                     playerBullets[i].active = 1;
