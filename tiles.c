@@ -134,6 +134,11 @@ struct Number{
     int x,y;
 };
 
+struct Score{
+    struct Sprite* sprite;
+    int x,y;
+    int score;
+};
 
 /* a struct for an enemies's logic and behavior */
 struct Enemy {
@@ -307,12 +312,10 @@ void init_bullets(struct Bullet pBullets[], int size){
     }
 } 
 
-
-
-
 void score_init(struct Number* num,int x, int y){
     num->x=x;
     num->y=y;
+    num->score=0;
     num->sprite=sprite_init(num->x, num->y, SIZE_32_8, 0, 0, 
         SCORE, 0);
 }
@@ -1011,6 +1014,22 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
     }
 }
 
+/*updates the sprites the score is displaying*/
+void updateScore(Score* s){
+    int score=s->score;
+    int digits=1;
+    int check=score%10;
+    while (check!=score){
+        digits++;
+        int num=1;
+        for (int i=0;i<digits;i++){
+            num*=digits;
+        }
+        check=score%num;
+    }
+    /*Score palette starts at 100*/
+}
+
 /* the main function */
 int main() {
     /* we set the mode to mode 0 with bg0 on */
@@ -1041,8 +1060,8 @@ int main() {
     struct Bullet eBullet;
     bullet_init(&eBullet,136,64,EnemyBullet);
 
-    struct Number score;
-    score_init(&score,0,32);
+    struct Score score;
+    score_init(&score,0,150);
 
     struct Number zero;
     num_init(&zero,32,32,Zero);
@@ -1107,7 +1126,7 @@ int main() {
             }
            // bulletCount += 1; 
         }        
-
+        updateScore(&score);
         formation_update(7, enemy1s, enemy2s, bosses);
 
         update_bullets(playerBullets, enemy1s, enemy2s, bosses); 
