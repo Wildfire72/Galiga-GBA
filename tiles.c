@@ -936,9 +936,13 @@ void player_update(struct Player* player) {
     sprite_position(player->sprite, player->x, player->y);
 }
 
-//void Pbullet_update(struct Bullet* bullet) {
-  //  if
-//}
+/* check if an enemy has hit the bottom of the screen */
+void enemy_screenCollision(struct Enemy* enemy) {
+    if (enemy->y >= HEIGHT - 12) {
+        //game_loss();
+        *display_control = *display_control & 0x0000;
+    }
+}
 
 /* update an enemy sprite */
 void enemy_update(struct Enemy* enemy) {
@@ -947,16 +951,9 @@ void enemy_update(struct Enemy* enemy) {
         if (enemy->counter >= enemy->animation_delay) {
             enemy->y += 1;
             sprite_move(enemy->sprite, 0, 1);
+            enemy_screenCollision(enemy);
             enemy->counter = 0;
         }
-    }
-}
-
-/* check if an enemy has hit the bottom of the screen */
-void enemy_screenCollision(struct Enemy* enemy) {
-    if (enemy->y >= HEIGHT - 12) {
-        //game_loss();
-        *display_control = *display_control & 0x0000;
     }
 }
 
@@ -1051,7 +1048,7 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
 
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
-    int score=(s->score);
+    int score=SSCORE;
     int thous=score/1000;
     int hunds=(score/100)%10;
     int tens=(score%100)/10;
@@ -1132,7 +1129,6 @@ int main() {
     int firingCounter = 0;
     while (1) {
         player_update(&player); 
-        
 
         if(button_pressed(BUTTON_RIGHT) && player.x < 224 ){
             player.x += 1;
