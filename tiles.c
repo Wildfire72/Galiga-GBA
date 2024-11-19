@@ -856,6 +856,9 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
 void enemy_checkDeath(struct Enemy* enemy) {
     if (enemy->health <= 0) {
         enemy->isAlive = 0;
+        sprite_set_offset(enemy->sprite, Explosion1); 
+        delay(10);
+        sprite_set_offset(enemy->sprite, Explosion2); 
         sprite_position(enemy->sprite, WIDTH, HEIGHT);
     }
 }
@@ -1051,7 +1054,7 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
 
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
-    int score=(s->score);
+    int score=SSCORE;
     int thous=score/1000;
     int hunds=(score/100)%10;
     int tens=(score%100)/10;
