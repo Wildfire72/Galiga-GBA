@@ -281,8 +281,8 @@ void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
     koopa->frame = 0;
     koopa->move = 0;
     koopa->counter = 0;
-    koopa->animation_delay = 12;
-    koopa->health = 10;
+    koopa->animation_delay = 15;
+    koopa->health = 0;
     koopa->isAlive = 0;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             offset, 0);
@@ -440,6 +440,7 @@ void spawn_formation1(struct Enemy enemy1s[]) {
         enemy1s[i].y = -16;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     }
 }
 
@@ -451,6 +452,7 @@ void spawn_formation2(struct Enemy enemy1s[]) {
         enemy1s[i].y = -16;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     }
 }
 
@@ -462,6 +464,7 @@ void spawn_formation3(struct Enemy enemy1s[]) {
         enemy1s[i].y = -28;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1; 
+        enemy1s[i].health = 10;
     }
     int r2_xStart = 58;
     int r2_xOffset = 36;
@@ -470,6 +473,7 @@ void spawn_formation3(struct Enemy enemy1s[]) {
         enemy1s[i].y = -16;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     } 
 }
 
@@ -481,6 +485,7 @@ void spawn_formation4(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         enemy1s[i].y = -28;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     }
     int r2_xStart = 56;
     for (int i = 0; i < 5; i++) {
@@ -488,7 +493,8 @@ void spawn_formation4(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         enemy2s[i].y = -16;
         sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
         enemy2s[i].isAlive = 1;
-    } 
+        enemy2s[i].health = 20;
+    }
 }
 
 void spawn_formation5(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
@@ -503,6 +509,7 @@ void spawn_formation5(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         }
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     }
     int e2_xStart = 32;
     for (int i = 0; i < 9; i++) {
@@ -514,6 +521,7 @@ void spawn_formation5(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         }
         sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
         enemy2s[i].isAlive = 1;
+        enemy2s[i].health = 20;
     }
 }
 
@@ -525,6 +533,7 @@ void spawn_formation6(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         enemy2s[i].y = -36;
         sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
         enemy2s[i].isAlive = 1;
+        enemy2s[i].health = 20;
     }
     int r2_xStart = 28;
     for (int i = 0; i < 8; i++) {
@@ -532,6 +541,7 @@ void spawn_formation6(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         enemy1s[i].y = -26;
         sprite_position(enemy1s[i].sprite,enemy1s[i].x,enemy1s[i].y);
         enemy1s[i].isAlive = 1;
+        enemy1s[i].health = 10;
     }
     int r3_xStart = 40;
     for (int i = 9; i < 16; i++) {
@@ -539,6 +549,7 @@ void spawn_formation6(struct Enemy enemy1s[], struct Enemy enemy2s[]) {
         enemy2s[i].y = -16;
         sprite_position(enemy2s[i].sprite,enemy2s[i].x,enemy2s[i].y);
         enemy2s[i].isAlive = 1;
+        enemy2s[i].health = 20;
     }
 }
 
@@ -553,17 +564,20 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             bosses[0].y = -44;
             sprite_position(bosses[0].sprite,bosses[0].x,bosses[0].y);
             bosses[0].isAlive = 1;
+            bosses[0].health = 50;
         } else if (i == 0 || i == 1 || i == 4 || i == 5 || i == 7 || i == 8 || i == 11 || i == 12) {
             enemy1s[enemy1Index].x = r1_xStart + (xOffset * i);
             enemy1s[enemy1Index].y = -44;
             sprite_position(enemy1s[enemy1Index].sprite,enemy1s[enemy1Index].x,enemy1s[enemy1Index].y);
             enemy1s[enemy1Index].isAlive = 1;
+            enemy1s[enemy1Index].health = 10;
             enemy1Index++;
         } else {
             enemy2s[enemy2Index].x = r1_xStart + (xOffset * i);
             enemy2s[enemy2Index].y = -44;
             sprite_position(enemy2s[enemy2Index].sprite,enemy2s[enemy2Index].x,enemy2s[enemy2Index].y);
             enemy2s[enemy2Index].isAlive = 1;
+            enemy2s[enemy2Index].health = 20; 
             enemy2Index++;
         }
     }
@@ -574,12 +588,14 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             enemy1s[enemy1Index].y = -30;
             sprite_position(enemy1s[enemy1Index].sprite,enemy1s[enemy1Index].x,enemy1s[enemy1Index].y);
             enemy1s[enemy1Index].isAlive = 1;
+            enemy1s[enemy1Index].health = 10;
             enemy1Index++;
         } else {
             enemy2s[enemy2Index].x = r2_xStart + (xOffset * i);
             enemy2s[enemy2Index].y = -30;
             sprite_position(enemy2s[enemy2Index].sprite,enemy2s[enemy2Index].x,enemy2s[enemy2Index].y);
             enemy2s[enemy2Index].isAlive = 1;
+            enemy2s[enemy2Index].health = 20; 
             enemy2Index++;
         }
     }
@@ -590,12 +606,14 @@ void spawn_formation7(struct Enemy enemy1s[], struct Enemy enemy2s[], struct Ene
             enemy1s[enemy1Index].y = -16;
             sprite_position(enemy1s[enemy1Index].sprite,enemy1s[enemy1Index].x,enemy1s[enemy1Index].y);
             enemy1s[enemy1Index].isAlive = 1;
+            enemy1s[enemy1Index].health = 10;
             enemy1Index++;
         } else {
             enemy2s[enemy2Index].x = r3_xStart + (xOffset * i);
             enemy2s[enemy2Index].y = -16;
             sprite_position(enemy2s[enemy2Index].sprite,enemy2s[enemy2Index].x,enemy2s[enemy2Index].y);
             enemy2s[enemy2Index].isAlive = 1;
+            enemy2s[enemy2Index].health = 20; 
             enemy2Index++;
         }
     }
@@ -806,23 +824,6 @@ void delay(unsigned int amount) {
     for (int i = 0; i < amount * 10; i++);
 }
 
-/*void handle_buttons(){
-     scroll with the arrow keys 
-    if (button_pressed(BUTTON_DOWN)) {
-        yscroll++;
-    }
-    if (button_pressed(BUTTON_UP)) {
-        yscroll--;
-
-    }
-    if (button_pressed(BUTTON_RIGHT)) {
-        xscroll++;
-    }
-    if (button_pressed(BUTTON_LEFT)) {
-        xscroll--;
-    } 
-} */
-
 void scrollBG1(int* xscroll, int* yscroll){
     *bg1_x_scroll = *xscroll * 2;
     *bg1_y_scroll = *yscroll * 2;
@@ -868,7 +869,6 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
             if (pBullet->x + 4 >= enemy2s[j].x && pBullet->x <= enemy2s[j].x + 12 && pBullet->y <= enemy2s[j].y + 12) {
                 enemy2s[j].health -= 10;
                 enemy_checkDeath(&enemy2s[j]);
-                sprite_position(enemy2s[j].sprite, WIDTH, HEIGHT);
                 pBullet->active = 0;
                 pBullet->yvel = 0;
                 pBullet->x = -16;
@@ -1079,8 +1079,8 @@ int main() {
     
     init_bullets(playerBullets, 20);
 
-    struct Bullet eBullet;
-    bullet_init(&eBullet,136,64,EnemyBullet);
+    //struct Bullet eBullet;
+    //bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Score score;
     score_init(&score,20,180);
