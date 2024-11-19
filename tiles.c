@@ -857,9 +857,11 @@ void enemy_checkDeath(struct Enemy* enemy) {
     if (enemy->health <= 0) {
         enemy->isAlive = 0;
         sprite_set_offset(enemy->sprite, Explosion1); 
-        delay(10);
-        sprite_set_offset(enemy->sprite, Explosion2); 
+        delay(100);
+        sprite_set_offset(enemy->sprite, Explosion2);
+        delay(100);
         sprite_position(enemy->sprite, WIDTH, HEIGHT);
+        sprite_set_offset(enemy->sprite, Enemy1);
     }
 }
 
@@ -1169,6 +1171,8 @@ int main() {
             if (currFormation < 7) {
                 currFormation++;
                 spawn_EnemyFormation(currFormation, enemy1s, enemy2s, bosses);
+            } else {
+                // you win!
             }
         }
 
