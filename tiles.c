@@ -312,7 +312,7 @@ void init_bullets(struct Bullet pBullets[], int size){
     }
 } 
 
-void score_init(struct Number* num,int x, int y){
+void score_init(struct Score* num,int x, int y){
     num->x=x;
     num->y=y;
     num->score=0;
@@ -1015,8 +1015,8 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
 }
 
 /*updates the sprites the score is displaying*/
-void updateScore(Score* s){
-    int score=s->score;
+void updateScore(struct Score* s){
+    int score=(s->score);
     int digits=1;
     int check=score%10;
     while (check!=score){
@@ -1061,7 +1061,7 @@ int main() {
     bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Score score;
-    score_init(&score,0,150);
+    score_init(&score,20,180);
 
     struct Number zero;
     num_init(&zero,32,32,Zero);
