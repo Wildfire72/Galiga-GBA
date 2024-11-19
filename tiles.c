@@ -45,7 +45,12 @@
 #define Seven 58
 #define Eight 60
 #define Nine 62
+#define Explosion1 64
+#define Explosion2 72
+
+/* Global Score*/
 #define SSCORE 0
+
 /* flags to set sprite handling in display control register */
 #define SPRITE_MAP_2D 0x0
 #define SPRITE_MAP_1D 0x40
@@ -1115,7 +1120,6 @@ int main() {
 
     struct Score score;
     score_init(&score,0,0);
-
 
     /* spawn the first enemy formation */
     int currFormation = 1;
