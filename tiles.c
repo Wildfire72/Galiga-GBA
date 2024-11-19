@@ -45,7 +45,12 @@
 #define Seven 58
 #define Eight 60
 #define Nine 62
+#define Explosion1 64
+#define Explosion2 72
+
+/* Global Score*/
 #define SSCORE 0
+
 /* flags to set sprite handling in display control register */
 #define SPRITE_MAP_2D 0x0
 #define SPRITE_MAP_1D 0x40
@@ -137,7 +142,10 @@ struct Number{
 struct Score{
     struct Sprite* sprite;
     int x,y;
-    int score;
+    struct Sprite* ones;
+    struct Sprite* tens;
+    struct Sprite* hunds;
+    struct Sprite* thous;
 };
 
 /* a struct for an enemies's logic and behavior */
@@ -315,9 +323,12 @@ void init_bullets(struct Bullet pBullets[], int size){
 void score_init(struct Score* num,int x, int y){
     num->x=x;
     num->y=y;
-    num->score=0;
     num->sprite=sprite_init(num->x, num->y, SIZE_32_8, 0, 0, 
         SCORE, 0);
+    num->thous=sprite_init(num->x+32, num->y,SIZE_8_8, 0, 0, Zero, 0);
+    num->hunds=sprite_init(num->x+40, num->y,SIZE_8_8, 0, 0, Zero, 0);
+    num->tens=sprite_init(num->x+48, num->y,SIZE_8_8, 0, 0, Zero, 0);
+    num->ones=sprite_init(num->x+56, num->y,SIZE_8_8, 0, 0, Zero, 0);
 }
 
 /* update all of the sprites on the screen */
@@ -1041,17 +1052,40 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
     int score=(s->score);
-    int digits=1;
-    int check=score%10;
-    while (check!=score){
-        digits++;
-        int num=1;
-        for (int i=0;i<digits;i++){
-            num*=digits;
-        }
-        check=score%num;
-    }
-    /*Score palette starts at 100*/
+    int thous=score/1000;
+    int hunds=(score/100)%10;
+    int tens=(score%100)/10;
+    int one=score%10;
+/*    struct Number zero;
+    num_init(&zero,32,32,Zero);
+
+    struct Number one;
+    num_init(&one,40,32,One);
+
+    struct Number two;
+    num_init(&two,48,32,Two);
+
+    struct Number three;
+    num_init(&three,56,32,Three);
+
+    struct Number four;
+    num_init(&four,64,32,Four);
+
+    struct Number five;
+    num_init(&five,72,32,Five);
+
+    struct Number six;
+    num_init(&six,80,32,Six);
+
+    struct Number seven;
+    num_init(&seven,88,32,Seven);
+
+    struct Number eight;
+    num_init(&eight,96,32,Eight);
+
+    struct Number nine;
+    num_init(&nine,104,32,Nine);
+*/
 }
 
 /* the main function */
@@ -1083,37 +1117,7 @@ int main() {
     //bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Score score;
-    score_init(&score,20,180);
-
-    struct Number zero;
-    num_init(&zero,32,32,Zero);
-
-    struct Number one;
-    num_init(&one,40,32,One);
-
-    struct Number two;
-    num_init(&two,48,32,Two);
-
-    struct Number three;
-    num_init(&three,56,32,Three);
-
-    struct Number four;
-    num_init(&four,64,32,Four);
-
-    struct Number five;
-    num_init(&five,72,32,Five);
-
-    struct Number six;
-    num_init(&six,80,32,Six);
-
-    struct Number seven;
-    num_init(&seven,88,32,Seven);
-
-    struct Number eight;
-    num_init(&eight,96,32,Eight);
-
-    struct Number nine;
-    num_init(&nine,104,32,Nine);
+    score_init(&score,0,0);
 
     /* spawn the first enemy formation */
     int currFormation = 1;
