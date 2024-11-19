@@ -1061,7 +1061,7 @@ int main() {
     bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Score score;
-    score_init(&score,20,180);
+    score_init(&score,0,0);
 
     struct Number zero;
     num_init(&zero,32,32,Zero);
