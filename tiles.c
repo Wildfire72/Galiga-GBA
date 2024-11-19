@@ -1,4 +1,4 @@
-    /*
+/*
  * tiles.c
  * program which demonstraes tile mode 0
  */
@@ -927,11 +927,35 @@ void enemy_update(struct Enemy* enemy) {
 void enemy_screenCollision(struct Enemy* enemy) {
     if (enemy->y >= HEIGHT - 12) {
         //game_loss();
+        *display_control = *display_control & 0x0000;
     }
 }
 
 /* check if the current formation has been beaten (1=yes, 0=no) */
-int formation_check(struct Enemy enemy1s[], int enemy1Size, struct Enemy enemy2s[], int enemy2Size, struct Enemy bosses[], int bossSize) {
+int formation_check(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
+    int enemy1Size = 0;
+    int enemy2Size = 0;
+    int bossSize = 0;
+    if (formationNum == 1) {
+        enemy1Size = 3;
+    } else if (formationNum == 2) {
+        enemy1Size = 6;
+    } else if (formationNum == 3) {
+        enemy1Size = 9;
+    } else if (formationNum == 4) {
+        enemy1Size = 8;
+        enemy2Size = 5;
+    } else if (formationNum == 5) {
+        enemy1Size = 7;
+        enemy2Size = 9;
+    } else if (formationNum == 6) {
+        enemy1Size = 8;
+        enemy2Size = 16;
+    } else if (formationNum == 7) {
+        enemy1Size = 17;
+        enemy2Size = 9;
+        bossSize = 1;
+    }
     for (int i = 0; i < enemy1Size; i++) {
         if (enemy1s[i].isAlive == 1) {
             return 0;
@@ -1015,9 +1039,7 @@ int main() {
     struct Enemy enemy2s[20];
     initializeAll_Enemy2(enemy2s, 20);
     struct Enemy bosses[3];
-    initializeAll_Boss(bosses, 3);    
-
-    spawn_EnemyFormation(7, enemy1s, enemy2s, bosses);
+    initializeAll_Boss(bosses, 3);
     
     struct Bullet playerBullets[20];
     
@@ -1059,6 +1081,10 @@ int main() {
     struct Number nine;
     num_init(&nine,104,32,Nine);
 
+    /* spawn the first enemy formation */
+    int currFormation = 1;
+    spawn_EnemyFormation(currFormation, enemy1s, enemy2s, bosses);
+
     /* set initial scroll to 0 */
     int xscroll = 0;
     int yscroll = 0;
@@ -1093,10 +1119,18 @@ int main() {
            // bulletCount += 1; 
         }        
 
-        formation_update(7, enemy1s, enemy2s, bosses);
+        formation_update(currFormation, enemy1s, enemy2s, bosses);
 
         update_bullets(playerBullets, enemy1s, enemy2s, bosses); 
         sprite_position(player.sprite, player.x , player.y);
+
+        int beaten = formation_check(currFormation, enemy1s, enemy2s, bosses);
+        if (beaten) {
+            if (currFormation < 7) {
+                currFormation++;
+                spawn_EnemyFormation(currFormation, enemy1s, enemy2s, bosses);
+            }
+        }
 
         scrollBG0(&xscroll,&yscroll,&scrollCount);
         /* set on screen position */
