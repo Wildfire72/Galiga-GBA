@@ -142,7 +142,6 @@ struct Number{
 struct Score{
     struct Sprite* sprite;
     int x,y;
-    int score;
     struct Sprite* ones;
     struct Sprite* tens;
     struct Sprite* hunds;
@@ -324,7 +323,6 @@ void init_bullets(struct Bullet pBullets[], int size){
 void score_init(struct Score* num,int x, int y){
     num->x=x;
     num->y=y;
-    num->score=0;
     num->sprite=sprite_init(num->x, num->y, SIZE_32_8, 0, 0, 
         SCORE, 0);
     num->thous=sprite_init(num->x+32, num->y,SIZE_8_8, 0, 0, Zero, 0);
