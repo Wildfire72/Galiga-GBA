@@ -849,8 +849,7 @@ void enemy_checkDeath(struct Enemy* enemy) {
 void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
     for (int j = 0; j < 20; j++) {
         if (enemy1s[j].isAlive) {
-            if ((pBullet->x + 8 >= enemy1s[j].x && pBullet->x <= enemy1s[j].x + 12)/* && pBullet->y <= enemy1s[j].y + 12 */) {
-                *display_control = *display_control & 0x0000;
+            if ((pBullet->x + 8 >= enemy1s[j].x && pBullet->x <= enemy1s[j].x + 12) && pBullet->y <= enemy1s[j].y + 12) {
                 enemy1s[j].health -= 10;
                 enemy_checkDeath(&enemy1s[j]);
             }
@@ -917,6 +916,7 @@ void enemy_update(struct Enemy* enemy) {
     if (enemy->isAlive) {
         enemy->counter++;
         if (enemy->counter >= enemy->animation_delay) {
+            enemy->y += 1;
             sprite_move(enemy->sprite, 0, 1);
             enemy->counter = 0;
         }
