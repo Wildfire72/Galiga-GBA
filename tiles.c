@@ -134,6 +134,11 @@ struct Number{
     int x,y;
 };
 
+struct Score{
+    struct Sprite* sprite;
+    int x,y;
+    int score;
+};
 
 /* a struct for an enemies's logic and behavior */
 struct Enemy {
@@ -307,12 +312,10 @@ void init_bullets(struct Bullet pBullets[], int size){
     }
 } 
 
-
-
-
-void score_init(struct Number* num,int x, int y){
+void score_init(struct Score* num,int x, int y){
     num->x=x;
     num->y=y;
+    num->score=0;
     num->sprite=sprite_init(num->x, num->y, SIZE_32_8, 0, 0, 
         SCORE, 0);
 }
@@ -852,6 +855,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
             if ((pBullet->x + 8 >= enemy1s[j].x && pBullet->x <= enemy1s[j].x + 12) && pBullet->y <= enemy1s[j].y + 12) {
                 enemy1s[j].health -= 10;
                 enemy_checkDeath(&enemy1s[j]);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y);
             }
         }
     }
@@ -861,6 +869,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
                 enemy2s[j].health -= 10;
                 enemy_checkDeath(&enemy2s[j]);
                 sprite_position(enemy2s[j].sprite, WIDTH, HEIGHT);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y);    
             }
         }
     }
@@ -869,6 +882,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
             if (pBullet->x + 4 >= bosses[j].x && pBullet->x <= bosses[j].x + 12 && pBullet->y <= bosses[j].y + 12) {
                 bosses[j].health -= 10;
                 enemy_checkDeath(&bosses[j]);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y); 
             }
         }
     }
@@ -1020,6 +1038,22 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
     }
 }
 
+/*updates the sprites the score is displaying*/
+void updateScore(struct Score* s){
+    int score=(s->score);
+    int digits=1;
+    int check=score%10;
+    while (check!=score){
+        digits++;
+        int num=1;
+        for (int i=0;i<digits;i++){
+            num*=digits;
+        }
+        check=score%num;
+    }
+    /*Score palette starts at 100*/
+}
+
 /* the main function */
 int main() {
     /* we set the mode to mode 0 with bg0 on */
@@ -1048,8 +1082,8 @@ int main() {
     struct Bullet eBullet;
     bullet_init(&eBullet,136,64,EnemyBullet);
 
-    struct Number score;
-    score_init(&score,0,32);
+    struct Score score;
+    score_init(&score,20,180);
 
     struct Number zero;
     num_init(&zero,32,32,Zero);
@@ -1091,6 +1125,7 @@ int main() {
     int scrollCount = 0;
     int bulletCount = 0;
     /* loop forever */
+    int firingCounter = 0;
     while (1) {
         player_update(&player); 
         
@@ -1106,12 +1141,13 @@ int main() {
             //    bulletCount = 0;
            // }
             for(int i = 0; i < 20; i++){
-                if(playerBullets[i].active == 0){
+                if(playerBullets[i].active == 0 && firingCounter >= 30){
                     playerBullets[i].x = player.x + 4; 
                     playerBullets[i].y = player.y -2; 
                     playerBullets[i].active = 1;
                     playerBullets[i].yvel = -1;
                     sprite_position(playerBullets[i].sprite, player.x + 4, player.y -2 );
+                    firingCounter = 0; 
                    // bulletCount += 1;
                     break;
                 }
@@ -1120,6 +1156,7 @@ int main() {
         }        
 
         formation_update(currFormation, enemy1s, enemy2s, bosses);
+        updateScore(&score);
 
         update_bullets(playerBullets, enemy1s, enemy2s, bosses); 
         sprite_position(player.sprite, player.x , player.y);
@@ -1138,7 +1175,7 @@ int main() {
 
         /* wait for vblank before scrolling */
         wait_vblank();
-
+        firingCounter += 1;  
         /* delay some */
         delay(200);
     }
