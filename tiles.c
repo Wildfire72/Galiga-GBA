@@ -1099,6 +1099,7 @@ int main() {
     int scrollCount = 0;
     int bulletCount = 0;
     /* loop forever */
+    int firingCounter = 0;
     while (1) {
         player_update(&player); 
         
@@ -1114,12 +1115,13 @@ int main() {
             //    bulletCount = 0;
            // }
             for(int i = 0; i < 20; i++){
-                if(playerBullets[i].active == 0){
+                if(playerBullets[i].active == 0 && firingCounter >= 30){
                     playerBullets[i].x = player.x + 4; 
                     playerBullets[i].y = player.y -2; 
                     playerBullets[i].active = 1;
                     playerBullets[i].yvel = -1;
                     sprite_position(playerBullets[i].sprite, player.x + 4, player.y -2 );
+                    firingCounter = 0; 
                    // bulletCount += 1;
                     break;
                 }
@@ -1138,7 +1140,7 @@ int main() {
 
         /* wait for vblank before scrolling */
         wait_vblank();
-
+        firingCounter += 1;  
         /* delay some */
         delay(200);
     }
