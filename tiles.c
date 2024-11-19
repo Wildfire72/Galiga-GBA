@@ -49,7 +49,7 @@
 #define Explosion2 72
 
 /* Global Score*/
-#define SSCORE 0
+int SSCORE =0;
 
 /* flags to set sprite handling in display control register */
 #define SPRITE_MAP_2D 0x0
@@ -856,6 +856,9 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
 void enemy_checkDeath(struct Enemy* enemy) {
     if (enemy->health <= 0) {
         enemy->isAlive = 0;
+        int offset=enemy->sprite->attribute2|0;
+        increaseScore(SSCORE,offset);
+        SSCORE+=offset;
         sprite_set_offset(enemy->sprite, Explosion1); 
         delay(100);
         sprite_set_offset(enemy->sprite, Explosion2);
@@ -1051,43 +1054,40 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
     }
 }
 
+int getOffsetForNum(int i){
+    if (i==0){
+        return Zero;
+    } else if (i==1){
+        return One;
+    } else if (i==2){
+        return Two;
+    } else if (i==3){
+        return Three;
+    } else if (i==4){
+        return Four;
+    } else if (i==5){
+        return Five;
+    } else if (i==6){
+        return Six;
+    } else if (i==7){
+        return Seven;
+    } else if (i==8){
+        return Eight;
+    }
+    return Nine;
+}
+
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
     int score=SSCORE;
     int thous=score/1000;
     int hunds=(score/100)%10;
-    int tens=(score%100)/10;
-    int one=score%10;
-/*    struct Number zero;
-    num_init(&zero,32,32,Zero);
-
-    struct Number one;
-    num_init(&one,40,32,One);
-
-    struct Number two;
-    num_init(&two,48,32,Two);
-
-    struct Number three;
-    num_init(&three,56,32,Three);
-
-    struct Number four;
-    num_init(&four,64,32,Four);
-
-    struct Number five;
-    num_init(&five,72,32,Five);
-
-    struct Number six;
-    num_init(&six,80,32,Six);
-
-    struct Number seven;
-    num_init(&seven,88,32,Seven);
-
-    struct Number eight;
-    num_init(&eight,96,32,Eight);
-
-    struct Number nine;
-    num_init(&nine,104,32,Nine);
-*/
+    int tens=(score/10)%10;
+    int ones=score%10;
+    sprite_set_offset(s->thous,getOffsetForNum(thous));
+    sprite_set_offset(s->hunds,getOffsetForNum(hunds));
+    sprite_set_offset(s->tens,getOffsetForNum(tens));
+    sprite_set_offset(s->ones,getOffsetForNum(ones));
 }
 
 /* the main function */
