@@ -852,6 +852,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
             if ((pBullet->x + 8 >= enemy1s[j].x && pBullet->x <= enemy1s[j].x + 12) && pBullet->y <= enemy1s[j].y + 12) {
                 enemy1s[j].health -= 10;
                 enemy_checkDeath(&enemy1s[j]);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y);
             }
         }
     }
@@ -861,6 +866,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
                 enemy2s[j].health -= 10;
                 enemy_checkDeath(&enemy2s[j]);
                 sprite_position(enemy2s[j].sprite, WIDTH, HEIGHT);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y);    
             }
         }
     }
@@ -869,6 +879,11 @@ void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struc
             if (pBullet->x + 4 >= bosses[j].x && pBullet->x <= bosses[j].x + 12 && pBullet->y <= bosses[j].y + 12) {
                 bosses[j].health -= 10;
                 enemy_checkDeath(&bosses[j]);
+                pBullet->active = 0;
+                pBullet->yvel = 0;
+                pBullet->x = -16;
+                pBullet->y = -16;
+                sprite_position(pBullet->sprite, pBullet->x, pBullet->y); 
             }
         }
     }
