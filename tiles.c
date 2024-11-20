@@ -857,8 +857,7 @@ void enemy_checkDeath(struct Enemy* enemy) {
     if (enemy->health <= 0) {
         enemy->isAlive = 0;
         int offset=enemy->sprite->attribute2|0;
-        increaseScore(SSCORE,offset);
-        SSCORE+=offset;
+        SSCORE=increaseScore(SSCORE,offset);
         sprite_set_offset(enemy->sprite, Explosion1); 
         delay(100);
         sprite_set_offset(enemy->sprite, Explosion2);
@@ -1054,7 +1053,8 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
     }
 }
 
-int getOffsetForNum(int i){
+int getOffsetForNum(int i);
+/*{
     if (i==0){
         return Zero;
     } else if (i==1){
@@ -1075,7 +1075,7 @@ int getOffsetForNum(int i){
         return Eight;
     }
     return Nine;
-}
+}*/
 
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
