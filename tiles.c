@@ -179,6 +179,15 @@ struct Enemy {
 
     /* whether the enemy sprite is alive (1 for true or 0 for false) */
     int isAlive;
+
+    /*whether the enemy is currently explosing*/ 
+    int isExploding;
+    
+    /*for explosion animation*/
+    int explosionTimer;
+
+    /*ogiginal Offset for this enemy. Use this to revert back to original image aftger explosoin */ 
+    int ogOffset; 
 };
 
 /* used for Bullets*/
@@ -292,6 +301,9 @@ void enemy_init(struct Enemy* koopa, int x, int y,int offset) {
     koopa->animation_delay = 15;
     koopa->health = 0;
     koopa->isAlive = 0;
+    koopa->isExploding = 0;
+    koopa->explosionTimer = 30;
+    koopa->ogOffset = offset; 
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             offset, 0);
 }
@@ -854,18 +866,41 @@ void scrollBG0(int* xscroll, int* yscroll, int* count){
 
 /* kill an enemy if its health has reached zero */
 void enemy_checkDeath(struct Enemy* enemy) {
-    if (enemy->health <= 0) {
+    if (enemy->health <= 0 && !enemy->isExploding) {
+        enemy->isExploding = 1;
+        enemy->explosionTimer = 30;         
         enemy->isAlive = 0;
         int offset=enemy->sprite->attribute2|0;
         SSCORE=increaseScore(SSCORE,offset);
-        sprite_set_offset(enemy->sprite, Explosion1); 
-        delay(100);
-        sprite_set_offset(enemy->sprite, Explosion2);
-        delay(100);
-        sprite_position(enemy->sprite, WIDTH, HEIGHT);
-        sprite_set_offset(enemy->sprite, Enemy1);
+      //  sprite_set_offset(enemy->sprite, Explosion1);
+        //sprite_set_offset(enemy->sprite, Explosion1); 
+       // delay(100);
+       // sprite_set_offset(enemy->sprite, Explosion2);
+       // delay(100);
+       // sprite_position(enemy->sprite, WIDTH, HEIGHT);
+       // sprite_set_offset(enemy->sprite, Enemy1);
     }
 }
+
+void explosion_update(struct Enemy* enemy){
+    if(enemy->isExploding){
+        if(enemy->explosionTimer > 15 ){
+            sprite_set_offset(enemy->sprite, Explosion1);
+        }else if(enemy->explosionTimer > 0){
+            sprite_set_offset(enemy->sprite, Explosion2);
+        }else{
+            enemy->isExploding = 0;
+            enemy->isAlive = 0;
+            sprite_set_offset(enemy->sprite, enemy->ogOffset); 
+            sprite_position(enemy->sprite,WIDTH, HEIGHT); 
+        }
+        enemy->explosionTimer--; 
+    }
+
+}
+
+
+
 
 /* check if a bullet has collided with an enemy */
 void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
@@ -953,6 +988,9 @@ void enemy_screenCollision(struct Enemy* enemy) {
 
 /* update an enemy sprite */
 void enemy_update(struct Enemy* enemy) {
+    if(enemy->isExploding){
+       explosion_update(enemy); 
+    }
     if (enemy->isAlive) {
         enemy->counter++;
         if (enemy->counter >= enemy->animation_delay) {
