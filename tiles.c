@@ -872,19 +872,12 @@ void enemy_checkDeath(struct Enemy* enemy) {
         enemy->isAlive = 0;
         int offset=enemy->sprite->attribute2|0;
         SSCORE=increaseScore(SSCORE,offset);
-      //  sprite_set_offset(enemy->sprite, Explosion1);
-        //sprite_set_offset(enemy->sprite, Explosion1); 
-       // delay(100);
-       // sprite_set_offset(enemy->sprite, Explosion2);
-       // delay(100);
-       // sprite_position(enemy->sprite, WIDTH, HEIGHT);
-       // sprite_set_offset(enemy->sprite, Enemy1);
     }
 }
 
 void explosion_update(struct Enemy* enemy){
     if(enemy->isExploding){
-        if(enemy->explosionTimer > 15 ){
+        if(enemy->explosionTimer > 15){
             sprite_set_offset(enemy->sprite, Explosion1);
         }else if(enemy->explosionTimer > 0){
             sprite_set_offset(enemy->sprite, Explosion2);
@@ -892,15 +885,11 @@ void explosion_update(struct Enemy* enemy){
             enemy->isExploding = 0;
             enemy->isAlive = 0;
             sprite_set_offset(enemy->sprite, enemy->ogOffset); 
-            sprite_position(enemy->sprite,WIDTH, HEIGHT); 
+            sprite_position(enemy->sprite,WIDTH,HEIGHT); 
         }
         enemy->explosionTimer--; 
     }
-
 }
-
-
-
 
 /* check if a bullet has collided with an enemy */
 void bulletEnemy_Collision(struct Bullet* pBullet, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
@@ -953,7 +942,7 @@ void update_bullet(struct Bullet* pbullet, struct Enemy enemy1s[], struct Enemy 
         pbullet->x = -16;
         pbullet->y = -16;
         sprite_position(pbullet->sprite, pbullet->x, pbullet->y);
-    //if the bullet has been fired and hasn't hit top, keep moving          
+    //if the bullet has been fired and hasn't hit top, keep moving
     }else if(pbullet->active == 1 && pbullet->y > 0){
         pbullet->y -= 1;
         sprite_move(pbullet->sprite, 0, pbullet->yvel);
@@ -981,8 +970,7 @@ void player_update(struct Player* player) {
 /* check if an enemy has hit the bottom of the screen */
 void enemy_screenCollision(struct Enemy* enemy) {
     if (enemy->y >= HEIGHT - 12) {
-        //game_loss();
-        *display_control = *display_control & 0x0000;
+        // you lose
     }
 }
 
@@ -1028,17 +1016,17 @@ int formation_check(int formationNum, struct Enemy enemy1s[], struct Enemy enemy
         bossSize = 1;
     }
     for (int i = 0; i < enemy1Size; i++) {
-        if (enemy1s[i].isAlive == 1) {
+        if (enemy1s[i].isAlive == 1 || enemy1s[i].isExploding == 1) {
             return 0;
         }
     }
     for (int i = 0; i < enemy2Size; i++) {
-        if (enemy2s[i].isAlive == 1) {
+        if (enemy2s[i].isAlive == 1 || enemy2s[i].isExploding == 1) {
             return 0;
         }
     }
     for (int i = 0; i < bossSize; i++) {
-        if (bosses[i].isAlive == 1) {
+        if (bosses[i].isAlive == 1 || bosses[i].isExploding == 1) {
             return 0;
         }
     }
