@@ -131,6 +131,12 @@ struct Player {
     int border;
 
     int health;
+
+    int isAlive;
+
+    int isExploding;
+
+    int explosionTimer;
 };
 
 /* used for numbers*/
@@ -285,6 +291,9 @@ void player_init(struct Player* koopa) {
     koopa->move = 0;
     koopa->counter = 0;
     koopa->animation_delay = 8;
+    koopa->isExploding = 0;
+    koopa->explosionTimer = 20;
+    koopa->isAlive = 1;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             koopa->frame, 0);
 }
@@ -874,6 +883,19 @@ void enemy_checkDeath(struct Enemy* enemy) {
         SSCORE=increaseScore(SSCORE,offset);
     }
 }
+void player_explosion_update(struct Player* player){
+    if(player->isExploding){
+        if(player->explosionTimer > 15){
+            sprite_set_offset(player->sprite, Explosion1);
+        }else if(player->explosionTimer > 10){
+            sprite_set_offset(player->sprite, Explosion2);
+        }else{
+            player->isAlive = 0; 
+        }
+        player->explosionTimer--; 
+    }
+}
+
 
 void explosion_update(struct Enemy* enemy){
     if(enemy->isExploding){
@@ -964,18 +986,24 @@ void update_bullets(struct Bullet pBullets[], struct Enemy enemy1s[], struct Ene
 
 /* update the player sprite */
 void player_update(struct Player* player) {
+    if(player->isAlive == 1){
     sprite_position(player->sprite, player->x, player->y);
+    }else{
+    sprite_position(player->sprite, WIDTH, HEIGHT); 
+    }
 }
 
 /* check if an enemy has hit the bottom of the screen */
-void enemy_screenCollision(struct Enemy* enemy) {
+void enemy_screenCollision(struct Enemy* enemy, struct Player* player) {
     if (enemy->y >= HEIGHT - 12) {
+        player->isExploding = 1;
+        player_explosion_update(player);
         // you lose
     }
 }
 
 /* update an enemy sprite */
-void enemy_update(struct Enemy* enemy) {
+void enemy_update(struct Enemy* enemy, struct Player* player) {
     if(enemy->isExploding){
        explosion_update(enemy); 
     }
@@ -984,7 +1012,7 @@ void enemy_update(struct Enemy* enemy) {
         if (enemy->counter >= enemy->animation_delay) {
             enemy->y += 1;
             sprite_move(enemy->sprite, 0, 1);
-            enemy_screenCollision(enemy);
+            enemy_screenCollision(enemy, player);
             enemy->counter = 0;
         }
     }
@@ -1034,48 +1062,48 @@ int formation_check(int formationNum, struct Enemy enemy1s[], struct Enemy enemy
 }
 
 /* update an enemy formation */
-void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[]) {
+void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy enemy2s[], struct Enemy bosses[], struct Player* player) {
     if (formationNum == 1) {
         for (int i = 0; i < 3; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
     } else if (formationNum == 2) {
         for (int i = 0; i < 6; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
     } else if (formationNum == 3) {
         for (int i = 0; i < 9; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
     } else if (formationNum == 4) {
         for (int i = 0; i < 8; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
         for (int i = 0; i < 5; i++) {
-            enemy_update(&enemy2s[i]);
+            enemy_update(&enemy2s[i], player);
         }
     } else if (formationNum == 5) {
         for (int i = 0; i < 7; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
         for (int i = 0; i < 9; i++) {
-            enemy_update(&enemy2s[i]);
+            enemy_update(&enemy2s[i], player);
         }
     } else if (formationNum == 6) {
         for (int i = 0; i < 8; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
         for (int i = 0; i < 16; i++) {
-            enemy_update(&enemy2s[i]);
+            enemy_update(&enemy2s[i], player);
         }
     } else if (formationNum == 7) {
         for (int i = 0; i < 17; i++) {
-            enemy_update(&enemy1s[i]);
+            enemy_update(&enemy1s[i], player);
         }
         for (int i = 0; i < 9; i++) {
-            enemy_update(&enemy2s[i]);
+            enemy_update(&enemy2s[i], player);
         }
-        enemy_update(&bosses[0]);
+        enemy_update(&bosses[0], player);
     }
 }
 
@@ -1159,7 +1187,7 @@ int main() {
     /* loop forever */
     int firingCounter = 0;
     while (1) {
-        player_update(&player); 
+        //player_update(&player); 
 
         if(button_pressed(BUTTON_RIGHT) && player.x < 224 ){
             player.x += 1;
@@ -1186,11 +1214,12 @@ int main() {
            // bulletCount += 1; 
         }        
 
-        formation_update(currFormation, enemy1s, enemy2s, bosses);
+        formation_update(currFormation, enemy1s, enemy2s, bosses, &player);
         updateScore(&score);
 
+        player_update(&player); 
         update_bullets(playerBullets, enemy1s, enemy2s, bosses); 
-        sprite_position(player.sprite, player.x , player.y);
+     //   sprite_position(player.sprite, player.x , player.y);
 
         int beaten = formation_check(currFormation, enemy1s, enemy2s, bosses);
         if (beaten) {
