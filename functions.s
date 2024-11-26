@@ -12,6 +12,7 @@ increaseScore:
 .boss:
     add r0, r0, #150
     add r0, r0, #100
+    add r0, r0, #100
     b .end
 .enemy1:
     add r0, r0, #15

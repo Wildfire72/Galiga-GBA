@@ -47,6 +47,10 @@
 #define Nine 62
 #define Explosion1 64
 #define Explosion2 72
+#define PEx1 80
+#define PEx2 88
+#define PEx3 96
+#define PEx4 104
 
 /* Global Score*/
 int SSCORE =0;
@@ -292,7 +296,7 @@ void player_init(struct Player* koopa) {
     koopa->counter = 0;
     koopa->animation_delay = 8;
     koopa->isExploding = 0;
-    koopa->explosionTimer = 20;
+    koopa->explosionTimer = 65;
     koopa->isAlive = 1;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             koopa->frame, 0);
@@ -885,10 +889,14 @@ void enemy_checkDeath(struct Enemy* enemy) {
 }
 void player_explosion_update(struct Player* player){
     if(player->isExploding){
-        if(player->explosionTimer > 15){
-            sprite_set_offset(player->sprite, Explosion1);
-        }else if(player->explosionTimer > 10){
+        if(player->explosionTimer > 52){
+            sprite_set_offset(player->sprite, PEx1);
+        }else if(player->explosionTimer > 39){
+            sprite_set_offset(player->sprite, PEx2);
+        }else if(player->explosionTimer > 26){
             sprite_set_offset(player->sprite, Explosion2);
+        }else if(player->explosionTimer > 13){
+            sprite_set_offset(player->sprite, Explosion1);
         }else{
             player->isAlive = 0; 
         }
@@ -1108,28 +1116,6 @@ void formation_update(int formationNum, struct Enemy enemy1s[], struct Enemy ene
 }
 
 int getOffsetForNum(int i);
-/*{
-    if (i==0){
-        return Zero;
-    } else if (i==1){
-        return One;
-    } else if (i==2){
-        return Two;
-    } else if (i==3){
-        return Three;
-    } else if (i==4){
-        return Four;
-    } else if (i==5){
-        return Five;
-    } else if (i==6){
-        return Six;
-    } else if (i==7){
-        return Seven;
-    } else if (i==8){
-        return Eight;
-    }
-    return Nine;
-}*/
 
 /*updates the sprites the score is displaying*/
 void updateScore(struct Score* s){
@@ -1173,7 +1159,7 @@ int main() {
     //bullet_init(&eBullet,136,64,EnemyBullet);
 
     struct Score score;
-    score_init(&score,0,0);
+    score_init(&score,0,5);
 
     /* spawn the first enemy formation */
     int currFormation = 1;
