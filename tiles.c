@@ -296,7 +296,7 @@ void player_init(struct Player* koopa) {
     koopa->counter = 0;
     koopa->animation_delay = 8;
     koopa->isExploding = 0;
-    koopa->explosionTimer = 65;
+    koopa->explosionTimer = 50;
     koopa->isAlive = 1;
     koopa->sprite = sprite_init(koopa->x, koopa->y, SIZE_16_16, 0, 0, 
             koopa->frame, 0);
@@ -889,13 +889,13 @@ void enemy_checkDeath(struct Enemy* enemy) {
 }
 void player_explosion_update(struct Player* player){
     if(player->isExploding){
-        if(player->explosionTimer > 52){
+        if(player->explosionTimer > 40){
             sprite_set_offset(player->sprite, PEx1);
-        }else if(player->explosionTimer > 39){
+        }else if(player->explosionTimer > 30){
             sprite_set_offset(player->sprite, PEx2);
-        }else if(player->explosionTimer > 26){
+        }else if(player->explosionTimer > 20){
             sprite_set_offset(player->sprite, Explosion2);
-        }else if(player->explosionTimer > 13){
+        }else if(player->explosionTimer > 10){
             sprite_set_offset(player->sprite, Explosion1);
         }else{
             player->isAlive = 0; 
